@@ -25,5 +25,5 @@ file = "results/regularity.csv"
 df = readChunk(file)
 df['RWEEK'] = df['RWEEK'].astype(int)
 
-plot = sns.distplot(a = df['RWEEK'].values, kde = False)
+plot = sns.distplot(a = df['RWEEK'].values, kde = False, bins = 7)
 plt.show()
