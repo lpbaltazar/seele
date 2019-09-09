@@ -51,9 +51,22 @@ def getCustomerType():
 	print(transact.head())
 	toCSV(transact, 'results/customer_type.csv')
 
-
+def calculateTenure():
+	df = readChunk('results/customer_type')
+	tenure = []
+	for i in df.CUSTOMERTYPE.unique():
+		temp = df.loc[df.CUSTOMERTYPE == i]
+		if i == 'PRESENT':
+			temp['TENURE'] = (temp['FIRST_TRANSACTION'] - pd.to_datetime('2019-08-31')).days
+		elif i == 'LOST':
+			temp['TENURE'] = (temp['FIRST_TRANSACTION'] - temp['LAST_TRANSACTION']).days
+		tenure.append(temp)
+	tenure = pd.concat(tenure)
+	print(tenure.head())
+	toCSV(tenure, 'results/tenure.csv')
 
 if __name__ == '__main__':
 	transactionDates()
 	averageRegularity()
 	getCustomerType()
+	calculateTenure()
