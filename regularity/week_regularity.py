@@ -21,14 +21,14 @@ binary = []
 for i in df.USERID.unique():
 	temp = df.loc[df.USERID == i]
 	bin_df = pd.DataFrame(index = list(temp.WEEK.unique()), data = 0, columns = list(range(1,8))) 
-	bin_df.index.name = 'week'
+	bin_df.index.name = 'WEEK'
 	for j in temp.WEEK.unique():
 		temp2 = temp.loc[temp.WEEK == j]
 		for k in range(len(temp2)):
 			bin_df.loc[j][temp2.iloc[i]['DAY_OF_WEEK']] = 1
 	
-	bin_df['rweek'] = bin_df.iloc[:, -7:].sum()
-	bin_df['userid'] = i
+	bin_df['RWEEK'] = bin_df.iloc[:, -7:].sum()
+	bin_df['USERID'] = i
 	binary.append(bin_df)
 
 binary = pd.concat(binary)
