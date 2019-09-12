@@ -12,61 +12,63 @@ import numpy as np
 from utils import readChunk, toCSV
 
 def transactionDates():
-	file = "../data/regularity.csv"
-	transact = readChunk(file, header = None)
-	transact.rename(columns = {0:'USERID', 1:'SESSIONID', 2:'MONTH', 3:'WEEK', 4:'DATE', 5:'DAY_OF_WEEK'}, inplace = True)
+	file = "results/first_and_last_transaction_correct.csv"
+	df = readChunk(file, header = None)
+	df.rename(columns = {0:'USERID', 1:'FIRST_TRANSACTION', 2:'LAST_TRANSACTION'}, inplace = True)
+	
+	file2 = 'results/average_regularity.csv'
+	df2 = readChunk(file2)
 
-	transact['DATE'] = pd.to_datetime(last_transact['DATE'])
-	transact.sort_values('DATE', ascending = True)
-	last_transact = transact.drop_duplicates(subset = ['USERID'], keep = 'last')
-	last_transact = last_transact[['USERID', 'DATE']]
-	last_transact.rename(columns = {'DATE':'LAST_TRANSACTION'}, inplace = True)
-	first_transact = transact.drop_duplicates(subset = ['USERID'], keep = 'first')
-	first_transact = first_transact[['USERID', 'DATE']]
-	first_transact.rename(columns = {'DATE':'FIRST_TRANSACTION'}, inplace = True)
-
-	first_transact = first_transact.merge(last_transact, how = 'left', on = 'USERID')
-	print(first_transact.head())
-	toCSV(first_transact, 'results/transaction_dates.csv')
+	df2 = df2.merge(df, how = 'left', on = 'USERID')
+	df2.drop(['RWEEK'], axis = 1, inplace = True)
+	toCSV(df2, 'results/transaction_dates.csv', index = False)
 
 
 def averageRegularity():
-	file = 'results/regularity.csv'
-	df = readChunk(file)
+	file = 'results/feb3_regularity.csv'
+	df = readChunk(file, header = None)
+	df.rename(columns = {0:'WEEK', 8:'RWEEK', 9:'USERID'}, inplace = True)
 
 	df['RWEEK'] = df['RWEEK'].astype(int)
 	new_df = df.groupby('USERID')['RWEEK'].mean().to_frame()
-	print(new_df.head())
+	new_df['RWEEK'] = round(new_df['RWEEK'])
 	toCSV(new_df, 'results/average_regularity.csv')
 
 def getCustomerType():
 	transact = readChunk('results/transaction_dates.csv')
 	aver = readChunk('results/average_regularity.csv')
-
 	transact = transact.merge(aver, how = 'left', on = 'USERID')
 	transact['LAST_TRANSACTION'] = pd.to_datetime(transact['LAST_TRANSACTION'])
-	transact['RWEEK'] = transact['RWEEK'].astype(float)
-	transact['INACTIVITY_DAYS'] = (transact['LAST_TRANSACTION'] - pd.to_datetime('2019-08-31')).days
-	transact['CUSTOMERTYPE'] = transact[['INACTIVITY_DAYS', 'RWEEK']].apply(lambda x: 'PRESENT' if x[0] <= x[1] else 'LOST')
 	print(transact.head())
-	toCSV(transact, 'results/customer_type.csv')
+	transact['RWEEK'] = transact['RWEEK'].astype(float)
+	transact['INACTIVITY_DAYS'] = transact['LAST_TRANSACTION'].apply(lambda x: (pd.to_datetime('2019-08-31') - x).days) 
+	transact['INACTIVITY_DAYS'] = transact['INACTIVITY_DAYS'].apply(lambda x: 0 if x == -1 else x).astype(float)
+	transact = customerType2(transact)
+	print(transact.head(10))
+	toCSV(transact, 'results/customer_type.csv', index = False)
+
+def customerType2(df):
+	ctype = []
+	for i in range(len(df)):
+		if df.iloc[i]['INACTIVITY_DAYS'] <= df.iloc[i]['RWEEK'] + 5: ctype.append('PRESENT')
+		else: ctype.append('LOST')
+	df['CUSTOMERTYPE'] = ctype
+	return df
 
 def calculateTenure():
-	df = readChunk('results/customer_type')
+	df = readChunk('results/customer_type.csv')
 	tenure = []
-	for i in df.CUSTOMERTYPE.unique():
-		temp = df.loc[df.CUSTOMERTYPE == i]
-		if i == 'PRESENT':
-			temp['TENURE'] = (temp['FIRST_TRANSACTION'] - pd.to_datetime('2019-08-31')).days
-		elif i == 'LOST':
-			temp['TENURE'] = (temp['FIRST_TRANSACTION'] - temp['LAST_TRANSACTION']).days
-		tenure.append(temp)
-	tenure = pd.concat(tenure)
-	print(tenure.head())
-	toCSV(tenure, 'results/tenure.csv')
+	df['FIRST_TRANSACTION'] = pd.to_datetime(df['FIRST_TRANSACTION'])
+	df['LAST_TRANSACTION'] = pd.to_datetime(df['LAST_TRANSACTION'])
+	for i in range(len(df)):
+		if df.iloc[i]['CUSTOMERTYPE'] == 'PRESENT': tenure.append((pd.to_datetime('2019-08-31') - df.iloc[i]['FIRST_TRANSACTION']).days)
+		else: tenure.append((df.iloc[i]['LAST_TRANSACTION'] - df.iloc[i]['FIRST_TRANSACTION']).days)
+	df['TENURE'] = tenure
+	print(df.head(10))
+	toCSV(df, 'results/tenure.csv', index = False)
 
 if __name__ == '__main__':
-	transactionDates()
 	averageRegularity()
+	transactionDates()
 	getCustomerType()
 	calculateTenure()
