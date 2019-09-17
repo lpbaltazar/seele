@@ -10,6 +10,8 @@ import time
 import pandas as pd
 import numpy as np
 
+from utils import readChunk
+
 file = "../data/yearweek_correct.csv"
 df = readChunk(file, header = None, nrows = 10000)
 df.rename(columns = {0:"USERID", 1:"SESSIONID", 2:"YEARWEEK"}, inplace = True)
@@ -23,10 +25,10 @@ with open("customer_present.csv", "a") as f:
 	writer = csv.writer(f, delimiter = ',')
 	for i in df.USERID.unique():
 		temp = df.loc[df.USERID == i]
-		new_df = pd.DataFrame(index = i, data = 0, columns = list(range(5, 35)))
+		new_df = pd.DataFrame(index = [i], data = 0, columns = list(range(5, 35)))
 
 		for j in range(len(temp)):
 			week = temp.iloc[j]['YEARWEEK']
 			new_df.loc[i][int(week)] = 1
-
-		writer.writerow(new_df)
+		
+		writer.writerow(new_df.reset_index().iloc[0])
