@@ -10,8 +10,8 @@ import pandas as pd
 import numpy as np
 
 from utils import readChunk
-import matplotlib as mpl
-mpl.use('tKagg')
+# import matplotlib as mpl
+# mpl.use('tKagg')
 from matplotlib import pyplot as plt
 import seaborn as sns
 
@@ -20,7 +20,7 @@ import matplotlib.style as style
 sns.set()
 style.use('seaborn-poster')
 style.use('bmh')
-plt.tight_layout()
+
 
 def distrib_plot(file, content_type, title):
 	df = pd.read_csv(file)
@@ -31,6 +31,21 @@ def distrib_plot(file, content_type, title):
 		plot.set_title(title)
 		plt.savefig('visualization/'+content_type+col+'.png', dpi = 600)
 		plt.clf()
+
+def distrib_combined():
+	channel2 = pd.read_csv('results/channel2.csv')
+	movie = pd.read_csv('results/movie.csv')
+	origmovie = pd.read_csv('results/origmovie.csv')
+	origshow = pd.read_csv('results/origshow.csv')
+
+	for col in ['RECENCY', 'FREQUENCY', 'ENGAGEMENT']:
+		plot = sns.distplot(a = channel2[col].values, kde = True, hist = False, label = True)
+		plot = sns.distplot(a = movie[col].values, kde = True, hist = False, label = True)
+		plot = sns.distplot(a = origmovie[col].values, kde = True, hist = False, label = True)
+		plot = sns.distplot(a = origshow[col].values, kde = True, hist = False, label = True)
+		plt.tight_layout()
+		plt.show()
+
 
 def scatter_plot(file, content_type, title):
 	df = pd.read_csv(file)
