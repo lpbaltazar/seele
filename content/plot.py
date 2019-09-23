@@ -20,6 +20,7 @@ import matplotlib.style as style
 sns.set()
 style.use('seaborn-poster')
 style.use('bmh')
+plt.tight_layout()
 
 def distrib_plot(file, content_type):
 	df = pd.read_csv(file)
@@ -28,6 +29,15 @@ def distrib_plot(file, content_type):
 		plot = sns.distplot(a = df[col].values, kde = False)
 		plt.savefig('visualization/'+content_type+col+'.png', dpi = 600)
 		plt.clf()
+
+def scatter_plot(file, content_type):
+	df = pd.read_csv(file)
+	print(df.head())
+	plot = sns.regplot('RECENCY', 'FREQUENCY', data = df, fit_reg = False)
+	plot.set_xlabel('RECENCY')
+	plot.set_ylabel('FREQUENCY')
+	plt.savefig('visualization/scatter/'+content_type+'rf.png', dpi = 600)
+	plt.clf()
 
 if __name__ == '__main__':
 	distrib_plot('results/old.csv', 'old')
