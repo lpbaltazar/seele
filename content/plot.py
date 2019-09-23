@@ -39,10 +39,12 @@ def distrib_combined():
 	origshow = pd.read_csv('results/origshow.csv')
 
 	for col in ['RECENCY', 'FREQUENCY', 'ENGAGEMENT']:
-		plot = sns.distplot(a = channel2[col].values, kde = True, hist = False, label = True)
-		plot = sns.distplot(a = movie[col].values, kde = True, hist = False, label = True)
-		plot = sns.distplot(a = origmovie[col].values, kde = True, hist = False, label = True)
-		plot = sns.distplot(a = origshow[col].values, kde = True, hist = False, label = True)
+		plot = sns.distplot(a = channel2[col].values, kde = True, hist = False, label = 'CHANNEL 2')
+		plot = sns.distplot(a = movie[col].values, kde = True, hist = False, label = 'MOVIE')
+		plot = sns.distplot(a = origmovie[col].values, kde = True, hist = False, label = 'ORIGINAL MOVIE')
+		plot = sns.distplot(a = origshow[col].values, kde = True, hist = False, label = 'ORIGINAL SHOW')
+		plot.set_xlabel(i)
+		plot.set_title(i)
 		plt.tight_layout()
 		plt.show()
 
