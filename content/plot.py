@@ -43,8 +43,8 @@ def distrib_combined():
 		plot = sns.distplot(a = movie[col].values, kde = True, hist = False, label = 'MOVIE')
 		plot = sns.distplot(a = origmovie[col].values, kde = True, hist = False, label = 'ORIGINAL MOVIE')
 		plot = sns.distplot(a = origshow[col].values, kde = True, hist = False, label = 'ORIGINAL SHOW')
-		plot.set_xlabel(i)
-		plot.set_title(i)
+		plot.set_xlabel(col)
+		plot.set_title(col)
 		plt.tight_layout()
 		plt.savefig('visualization/'+i+'.png', dpi = 600)
 
