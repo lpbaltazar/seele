@@ -46,7 +46,7 @@ def distrib_combined():
 		plot.set_xlabel(col)
 		plot.set_title(col)
 		plt.tight_layout()
-		plt.savefig('visualization/'+i+'.png', dpi = 600)
+		plt.savefig('visualization/'+col+'.png', dpi = 600)
 
 
 def scatter_plot(file, content_type, title):
