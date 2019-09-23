@@ -27,6 +27,7 @@ def distrib_plot(file, content_type):
 	print(df.head())
 	for col in ['RECENCY', 'FREQUENCY', 'ENGAGEMENT']:
 		plot = sns.distplot(a = df[col].values, kde = False)
+		plot.set_xlabel(col)
 		plt.savefig('visualization/'+content_type+col+'.png', dpi = 600)
 		plt.clf()
 
@@ -39,9 +40,25 @@ def scatter_plot(file, content_type):
 	plt.savefig('visualization/scatter/'+content_type+'rf.png', dpi = 600)
 	plt.clf()
 
+	plot = sns.regplot('RECENCY', 'ENGAGEMENT', data = df, fit_reg = False)
+	plot.set_xlabel('RECENCY')
+	plot.set_ylabel('FREQUENCY')
+	plt.savefig('visualization/scatter/'+content_type+'re.png', dpi = 600)
+	plt.clf()
+
+	plot = sns.regplot('FREQUENCY', 'ENGAGEMENT', data = df, fit_reg = False)
+	plot.set_xlabel('FREQUENCY')
+	plot.set_ylabel('ENGAGEMENT')
+	plt.savefig('visualization/scatter/'+content_type+'fe.png', dpi = 600)
+	plt.clf()
+
 if __name__ == '__main__':
-	distrib_plot('results/old.csv', 'old')
+	distrib_plot('results/channel2.csv', 'channel2')
 	distrib_plot('results/origshow.csv', 'origshow')
 	distrib_plot('results/origmovie.csv', 'origmovie')
 	distrib_plot('results/movie.csv', 'movie')
-	distrib_plot('results/live.csv', 'live')
+
+	scatter_plot('results/channel2.csv', 'channel2')
+	scatter_plot('results/origshow.csv', 'origshow')
+	scatter_plot('results/origmovie.csv', 'origmovie')
+	scatter_plot('results/movie.csv', 'movie')
