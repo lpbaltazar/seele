@@ -12,10 +12,15 @@ import numpy as np
 
 from utils import readChunk, toCSV
 
-file = "../data/freq_fastcut.csv"
+file = "../data/freq_current.csv"
 df = readChunk(file, sep = '\t')
 df.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "EXTRACT(YEAR_MONTH FROM MIN(MODIFIEDDATE))":'MONTH', "YEARWEEK(MIN(MODIFIEDDATE))":'WEEK', "COUNT(DISTINCT SESSIONID)":'FREQUENCY'}, inplace = True)
 
+file3 = "../data/freq_old.csv"
+df3 = readChunk(file3, sep = '\t')
+df3.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "EXTRACT(YEAR_MONTH FROM MIN(MODIFIEDDATE))":'MONTH', "YEARWEEK(MIN(MODIFIEDDATE))":'WEEK', "COUNT(DISTINCT SESSIONID)":'FREQUENCY'}, inplace = True)
+
+df = pd.concat([df, df3])
 print(df.head())
 print('getting frequency')
 df.FREQUENCY = df.FREQUENCY.astype(int)
@@ -36,9 +41,14 @@ print(len(df))
 df = df[['USERID', 'RECENCY']]
 
 print('getting engagement')
-file2 = "../data/eng_fastcut.csv"
+file2 = "../data/eng_current.csv"
 df2 = readChunk(file2, sep = '\t')
 df2.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "EXTRACT(YEAR_MONTH FROM MIN(MODIFIEDDATE))":'MONTH', "YEARWEEK(MIN(MODIFIEDDATE))":'WEEK', "TIMESTAMPDIFF(MINUTE, MIN(SESSION_STARTDT), MAX(SESSION_ENDDT))":'ENGAGEMENT'}, inplace = True)
+file3 = "../data/eng_old.csv"
+df3 = readChunk(file3, sep = '\t')
+df3.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "EXTRACT(YEAR_MONTH FROM MIN(MODIFIEDDATE))":'MONTH', "YEARWEEK(MIN(MODIFIEDDATE))":'WEEK', "COUNT(DISTINCT SESSIONID)":'FREQUENCY'}, inplace = True)
+
+df2 = pd.concat([df2, df3])
 df2.ENGAGEMENT = df2.ENGAGEMENT.astype(int)
 eng = df2.groupby('USERID')['ENGAGEMENT'].sum().to_frame()
 print(eng.head(10))
@@ -48,4 +58,4 @@ df = df.merge(freq, how = 'left', on = 'USERID')
 df = df.merge(eng, how = 'left', on = 'USERID')
 print(len(df))
 
-toCSV(df, 'results/fastcut.csv', index = False)
+toCSV(df, 'results/channel2.csv', index = False)
