@@ -115,12 +115,14 @@ if __name__ == '__main__':
 	# distrib_plot('results/origmovie.csv', 'origmovie', 'ORIGINAL MOVIE')
 	# distrib_plot('results/movie.csv', 'movie', 'MOVIE')
 
-	scatter_plot('results/channel2.csv', 'channel2', 'CHANNEL 2')
-	scatter_plot('results/origshow.csv', 'origshow', 'ORIGINAL SHOW')
-	scatter_plot('results/origmovie.csv', 'origmovie', 'ORIGINAL MOVIE')
-	scatter_plot('results/movie.csv', 'movie', 'MOVIE')
+	# scatter_plot('results/channel2.csv', 'channel2', 'CHANNEL 2')
+	# scatter_plot('results/origshow.csv', 'origshow', 'ORIGINAL SHOW')
+	# scatter_plot('results/origmovie.csv', 'origmovie', 'ORIGINAL MOVIE')
+	# scatter_plot('results/movie.csv', 'movie', 'MOVIE')
 
-	plot_customer_segment('results/channel2.csv', 'channel2', 8000, 200000)
-	plot_customer_segment('results/origshow.csv', 'origshow', 500, 35000)
-	plot_customer_segment('results/origmovie.csv', 'origmovie', 250, 17500)
-	plot_customer_segment('results/movie.csv', 'movie', 700, 50000)
+	# plot_customer_segment('results/channel2.csv', 'channel2', 8000, 200000)
+	# plot_customer_segment('results/origshow.csv', 'origshow', 500, 35000)
+	# plot_customer_segment('results/origmovie.csv', 'origmovie', 250, 17500)
+	# plot_customer_segment('results/movie.csv', 'movie', 700, 50000)
+
+	distrib_combined()
