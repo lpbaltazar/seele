@@ -36,14 +36,19 @@ def getCustomerType(row):
 		if (row['CHANNEL2'] == 1) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 1) & (row['ORIGMOVIE'] == 1): return "CHANNEL2_ORIGINAL"
 		elif (row['CHANNEL2'] == 1) & (row['MOVIE'] == 1) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 1): return "DIVERSE"
 		elif (row['CHANNEL2'] == 1) & (row['MOVIE'] == 1) & (row['ORIGSHOW'] == 1) & (row['ORIGMOVIE'] == 0): return "DIVERSE"
+		elif (row['CHANNEL2'] == 0) & (row['MOVIE'] == 1) & (row['ORIGSHOW'] == 1) & (row['ORIGMOVIE'] == 1): return "ORIGINAL_MOVIES"
 	elif row['sum'] == 2:
 		if (row['CHANNEL2'] == 1) & (row['MOVIE'] == 1) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 0): return "CHANNEL2_MOVIE"
 		elif (row['CHANNEL2'] == 1) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 1) & (row['ORIGMOVIE'] == 0): return "CHANNEL2_ORIGINAL"
-	elif (row['CHANNEL2'] == 1) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 1): return "CHANNEL2_ORIGINAL"
+		elif (row['CHANNEL2'] == 1) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 1): return "CHANNEL2_ORIGINAL"
+		elif (row['CHANNEL2'] == 0) & (row['MOVIE'] == 1) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 1): return "ORIGINAL_MOVIES"
+		elif (row['CHANNEL2'] == 0) & (row['MOVIE'] == 1) & (row['ORIGSHOW'] == 1) & (row['ORIGMOVIE'] == 0): return "ORIGINAL_MOVIES"
 		else: return "ORIGINALS"
 	elif row['sum'] == 1:
 		if (row['CHANNEL2'] == 1) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 0): return "CHANNEL2"
 		elif (row['MOVIE'] == 1) & (row['MOVIE'] == 1) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 0): return "MOVIE"
+		elif (row['MOVIE'] == 0) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 1) & (row['ORIGMOVIE'] == 0): return "ORIGINALS"
+		elif (row['MOVIE'] == 0) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 1): return "ORIGINALS"
 
 print('getting customer type')
 contenttype = []
@@ -53,3 +58,5 @@ for i in range(len(label)):
 label['CONTENT_TYPE_WATCHED'] = contenttype
 print('done')
 label.to_csv('results/customer_feature_matrix_v2.csv', index = False)
+print(label.CONTENT_TYPE_WATCHED.unique())
+print(len(label.loc[label.CONTENT_TYPE_WATCHED] == np.nan))
