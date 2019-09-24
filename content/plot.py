@@ -35,7 +35,7 @@ def distrib_plot(file, content_type, title):
 def distrib_combined():
 	df2 = pd.read_csv("../data/customer_feature_matrix.csv", usecols = ["userid", "label"])
 	df2.columns = df2.columns.str.upper()
-	df2 = df2.loc(df2.LABEL == 'ACTIVE')
+	df2 = df2.loc[df2.LABEL == 'ACTIVE']
 	channel2 = pd.read_csv('results/channel2.csv')
 	channel2 = channel2.merge(df2, how = right, on = 'USERID')
 	movie = pd.read_csv('results/movie.csv')
