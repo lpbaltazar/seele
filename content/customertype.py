@@ -18,7 +18,7 @@ channel2['CHANNEL2'] = 1
 label = channel2[['USERID', 'CHANNEL2']].merge(label, how = 'right', on = 'USERID')
 movie = pd.read_csv('results/movie.csv')
 movie['MOVIE'] = 1
-label = movie[['MOVIE', 'MOVIE']].merge(label, how = 'right', on = 'USERID')
+label = movie[['USERID', 'MOVIE']].merge(label, how = 'right', on = 'USERID')
 origmovie = pd.read_csv('results/origmovie.csv')
 origmovie['ORIGMOVIE'] = 1
 label = origmovie[['USERID', 'ORIGMOVIE']].merge(label, how = 'right', on = 'USERID')
