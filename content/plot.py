@@ -37,13 +37,13 @@ def distrib_combined():
 	df2.columns = df2.columns.str.upper()
 	df2 = df2.loc[df2.LABEL == 'ACTIVE']
 	channel2 = pd.read_csv('results/channel2.csv')
-	channel2 = channel2.merge(df2, how = right, on = 'USERID')
+	channel2 = channel2.merge(df2, how = 'right', on = 'USERID')
 	movie = pd.read_csv('results/movie.csv')
-	movie = movie.merge(df2, how = right, on = 'USERID')
+	movie = movie.merge(df2, how = 'right', on = 'USERID')
 	origmovie = pd.read_csv('results/origmovie.csv')
-	origmovie = origmovie.merge(df2, how = right, on = 'USERID')
+	origmovie = origmovie.merge(df2, how = 'right', on = 'USERID')
 	origshow = pd.read_csv('results/origshow.csv')
-	origshow = origshow.merge(df2, how = right, on = 'USERID')
+	origshow = origshow.merge(df2, how = 'right', on = 'USERID')
 
 	for col in ['RECENCY', 'FREQUENCY', 'ENGAGEMENT']:
 		plot = sns.distplot(a = channel2[col].values, kde = True, hist = False, label = 'CHANNEL 2')
