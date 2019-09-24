@@ -12,6 +12,7 @@ import numpy as np
 label = pd.read_csv("../data/customer_feature_matrix.csv", usecols = ["userid", "label"])
 label.columns = label.columns.str.upper()
 
+print('combining data')
 label = label.loc[label.LABEL == 'ACTIVE']
 channel2 = pd.read_csv('results/channel2.csv')
 channel2['CHANNEL2'] = 1
@@ -38,9 +39,11 @@ def getCustomerType(row):
 		if (row['CHANNEL2'] == 1) & (row['MOVIE'] == np.nan) & (row['ORIGSHOW'] == np.nan) & (row['ORIGMOVIE'] == np.nan): return "CHANNEL2"
 		elif (row['MOVIE'] == 1) & (row['MOVIE'] == 1) & (row['ORIGSHOW'] == np.nan) & (row['ORIGMOVIE'] == np.nan): return "MOVIE"
 
+print('getting customer type')
 contenttype = []
 for i in range(len(label)):
 	contenttype.append(label.iloc[i])
 
 label['CONTENT_TYPE_WATCHED'] = contenttype
+print('done')
 label.to_csv('results/customer_feature_matrix_v2.csv')
