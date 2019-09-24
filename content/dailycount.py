@@ -32,7 +32,7 @@ df3.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "DAYOFWEEK(MIN(MODIFIEDDATE))
 df = pd.concat([df, df3])
 print(df.head())
 
-df.dropduplicates(subset = ['USERID', 'DATE'], inplace = True)
+df.drop_duplicates(subset = ['USERID', 'DATE'], inplace = True)
 
 label = pd.read_csv("../data/customer_feature_matrix.csv", usecols = ["userid", "label"])
 label.columns = label.columns.str.upper()
