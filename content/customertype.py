@@ -42,7 +42,7 @@ def getCustomerType(row):
 print('getting customer type')
 contenttype = []
 for i in range(len(label)):
-	contenttype.append(label.iloc[i])
+	contenttype.append(getCustomerType(label.iloc[i]))
 
 label['CONTENT_TYPE_WATCHED'] = contenttype
 print('done')

@@ -41,7 +41,7 @@ print(len(df))
 
 label = label.loc[label.LABEL == 'ACTIVE']
 df = df.merge(label, how = 'left', on = 'USERID')
-prinnt(len(df))
+print(len(df))
 
 new_df = df.group_by('DATE')['USERID'].count().to_frame()
 print(new_df.head())
