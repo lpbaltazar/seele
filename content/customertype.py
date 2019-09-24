@@ -33,11 +33,13 @@ label['sum'] = label['CHANNEL2'] + label['MOVIE'] + label['ORIGSHOW'] + label['O
 def getCustomerType(row):
 	if row['sum'] == 4: return "DIVERSE"
 	elif row['sum'] == 3:
-		if (row['CHANNEL2'] == 1) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 1) & (row['ORIGMOVIE'] == 1): return "CHANNEL2_MOVIE"
+		if (row['CHANNEL2'] == 1) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 1) & (row['ORIGMOVIE'] == 1): return "CHANNEL2_ORIGINAL"
 		elif (row['CHANNEL2'] == 1) & (row['MOVIE'] == 1) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 1): return "DIVERSE"
 		elif (row['CHANNEL2'] == 1) & (row['MOVIE'] == 1) & (row['ORIGSHOW'] == 1) & (row['ORIGMOVIE'] == 0): return "DIVERSE"
 	elif row['sum'] == 2:
 		if (row['CHANNEL2'] == 1) & (row['MOVIE'] == 1) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 0): return "CHANNEL2_MOVIE"
+		elif (row['CHANNEL2'] == 1) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 1) & (row['ORIGMOVIE'] == 0): return "CHANNEL2_ORIGINAL"
+	elif (row['CHANNEL2'] == 1) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 1): return "CHANNEL2_ORIGINAL"
 		else: return "ORIGINALS"
 	elif row['sum'] == 1:
 		if (row['CHANNEL2'] == 1) & (row['MOVIE'] == 0) & (row['ORIGSHOW'] == 0) & (row['ORIGMOVIE'] == 0): return "CHANNEL2"
