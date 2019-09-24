@@ -26,7 +26,7 @@ label = origmovie[['USERID', 'ORIGMOVIE']].merge(label, how = 'right', on = 'USE
 origshow = pd.read_csv('results/origshow.csv')
 origshow['ORIGSHOW'] = 1
 label = origshow[['USERID', 'ORIGSHOW']].merge(label, how = 'right', on = 'USERID')
-
+label.fillna(0, inplace = True)
 label['sum'] = label['CHANNEL2'] + label['MOVIE'] + label['ORIGSHOW'] + label['ORIGMOVIE']
 
 def getCustomerType(row):
@@ -46,4 +46,4 @@ for i in range(len(label)):
 
 label['CONTENT_TYPE_WATCHED'] = contenttype
 print('done')
-label.to_csv('results/customer_feature_matrix_v2.csv')
+label.to_csv('results/customer_feature_matrix_v2.csv', index = False)
