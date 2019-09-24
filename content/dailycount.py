@@ -23,11 +23,11 @@ style.use('bmh')
 
 file = "../data/reg_current.csv"
 df = readChunk(file, sep = '\t')
-df.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "DAYOFWEEK(MIN(MODIFIEDDATE))"}, inplace = True)
+df.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "DAYOFWEEK(MIN(MODIFIEDDATE))":'DAYOFWEEK'}, inplace = True)
 
 file3 = "../data/reg_old.csv"
 df3 = readChunk(file3, sep = '\t')
-df3.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "DAYOFWEEK(MIN(MODIFIEDDATE))"}, inplace = True)
+df3.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "DAYOFWEEK(MIN(MODIFIEDDATE))":'DAYOFWEEK'}, inplace = True)
 
 df = pd.concat([df, df3])
 print(df.head())
