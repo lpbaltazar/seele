@@ -49,7 +49,7 @@ def getNumberofCustomers(df):
 
 	new_df['DATE'] = pd.to_datetime(new_df['DATE'])
 
-	new_df['MONTH'] = new_df.DATE.apply(lambda x: x.strftime("%b")[:3])
+	new_df['MONTH'] = new_df.DATE.apply(lambda x: x.strftime("%b"))
 	new_df.sort_values('DATE', inplace = True)
 	new_df.set_index('DATE', inplace = True)
 	return new_df
@@ -59,9 +59,9 @@ def  line_format(x):
 	day = x.day
 	return month+str(day)
 
-def plotDF(new_df, ylim = None):
+def plotDF(new_df, outfile, ylim = None):
 	print(new_df.head())
-	fig, axes = plt.subplot(2,4)
+	fig, axes = plt.subplots(2,4, sharey = 'row')
 	x = 0
 	y = 0
 	for i in new_df.MONTH.unique():
@@ -70,19 +70,24 @@ def plotDF(new_df, ylim = None):
 		print(xcoords)
 		temp = temp[['USERID']]
 		plot = temp.plot(kind = 'bar', legend = False, ax = axes[x, y])
-		plot.set_xlabel('DATE')
 		plot.set_ylabel('NUMBER OF CUSTOMERS')
+		plot.set_xlabel('')
 		plot.set_xticklabels(map(lambda z: line_format(z), temp.index))
+		plot.tick_params(axis = 'x', which = 'major', labelsize = 6)
+		plot.set_title(i)
+		# plot.tick_params(axis = 'both', which = 'minor', labelsize = 10)
 		if ylim:
-			plot.set_ylim(0,90000)
+			plot.set_ylim(0,ylim)
 		y = y + 1
 		if y == 4:
 			y = 0
 			x = x + 1
-	plt.show()
+	fig.delaxes(axes[1,3])
+	plt.tight_layout()
+	plt.savefig(outfile, dpi = 600)
 
 if __name__ == '__main__':
-	df = getFile("../data/reg_origshow.csv", "../data/reg_origmovie.csv")
+	df = getFile("../data/reg_current.csv", "../data/reg_old.csv")
 	df = getNumberofCustomers(df)
-	plotDF(df, 90000)
+	plotDF(df, 'visualization/daily/channel2.png', 500000)
 
