@@ -33,5 +33,6 @@ movie.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "DAYOFWEEK(MIN(MODIFIEDDATE
 movie = movie.merge(diverse, how = 'right', on = 'USERID')
 
 current = pd.concat([current, old, origmovie, origshow, movie])
-print(len(current))
-print(len(current.USERID.unique()))
+
+current['WEEK'] = pd.to_datetime(current['WEEK']).strftime("%U")
+print(current['WEEK'])
