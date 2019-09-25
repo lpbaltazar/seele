@@ -61,24 +61,21 @@ def  line_format(x):
 
 def plotDF(new_df, ylim = None):
 	print(new_df.head())
-	fig, axes = plt.subplots(2,4)
-	x = 0
-	y = 0
+	fig, (ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8) = plt.subplots(2,4)
+	axes = [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8]
+	count = 0
 	for i in new_df.MONTH.unique():
 		temp = new_df.loc[new_df.MONTH == i]
 		xcoords = temp.loc[(temp.DAYOFWEEK == '1') | (temp.DAYOFWEEK == '7')].index
 		print(xcoords)
 		temp = temp[['USERID']]
-		axes[x, y] = temp.plot(kind = 'bar', legend = False)
-		axes[x, y].set_xlabel('DATE')
-		axes[x, y].set_ylabel('NUMBER OF CUSTOMERS')
-		axes[x, y].set_xticklabels(map(lambda z: line_format(z), temp.index))
+		axes[count] = temp.plot(kind = 'bar', legend = False)
+		axes[count].set_xlabel('DATE')
+		axes[count].set_ylabel('NUMBER OF CUSTOMERS')
+		axes[count].set_xticklabels(map(lambda z: line_format(z), temp.index))
 		if ylim:
-			axes[x, y].set_ylim(0,90000)
-		y = y + 1
-		if y == 4:
-			y = 0
-			x = x + 1
+			axes[count].set_ylim(0,90000)
+		count = count + 1
 		plt.show()
 
 if __name__ == '__main__':
