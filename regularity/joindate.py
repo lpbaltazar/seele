@@ -14,7 +14,7 @@ from utils import readChunk
 
 def getWeekPresent():
 	file = "../data/yearweek_correct.csv"
-	df = readChunk(file, header = None, nrows = 10000)
+	df = readChunk(file, header = None)
 	df.rename(columns = {0:"USERID", 1:"SESSIONID", 2:"YEARWEEK"}, inplace = True)
 	df.YEARWEEK = df.YEARWEEK.astype(int)
 	df.YEARWEEK = df.YEARWEEK - 201900
@@ -48,7 +48,7 @@ def addJoinedWeek():
 
 	joined = []
 	for i in range(len(df)):
-		joined.append(getJoinedweek(df.iloc[i]))
+		joined.append(getJoinedWeek(df.iloc[i]))
 	df['joinedweek'] = joined
 	print(df.joinedweek)
 
