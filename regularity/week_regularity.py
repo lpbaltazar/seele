@@ -42,3 +42,5 @@ with open("regularity_1.csv", "a") as f:
 		for j in range(len(bin_df)):
 			writer.writerow(bin_df.iloc[j][:])
 
+binary = pd.concat(binary)
+toCSV(binary, "results/regularity.csv")
