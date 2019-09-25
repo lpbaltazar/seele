@@ -25,10 +25,14 @@ def transactionDates():
 
 
 def averageRegularity():
-	file = 'results/feb3_regularity.csv'
+	file = 'results/feb3_weekly_regularity.csv'
 	df = readChunk(file, header = None)
 	df.rename(columns = {0:'WEEK', 8:'RWEEK', 9:'USERID'}, inplace = True)
-
+	file2 = 'results/feb3_regularity.csv'
+	df2 = readChunk(file2, header = None)
+	df2.rename(columns = {0:'WEEK', 8:'RWEEK', 9:'USERID'}, inplace = True)
+	df = pd.concat([df, df2])
+	print('Number of customers: ', len(df.USERID.unique()))
 	df['RWEEK'] = df['RWEEK'].astype(int)
 	new_df = df.groupby('USERID')['RWEEK'].mean().to_frame()
 	new_df['RWEEK'] = round(new_df['RWEEK'])
@@ -41,7 +45,7 @@ def getCustomerType():
 	transact['LAST_TRANSACTION'] = pd.to_datetime(transact['LAST_TRANSACTION'])
 	print(transact.head())
 	transact['RWEEK'] = transact['RWEEK'].astype(float)
-	transact['INACTIVITY_DAYS'] = transact['LAST_TRANSACTION'].apply(lambda x: (pd.to_datetime('2019-08-31') - x).days) 
+	transact['INACTIVITY_DAYS'] = transact['LAST_TRANSACTION'].apply(lambda x: (pd.to_datetime('2019-09-01') - x).days) 
 	transact['INACTIVITY_DAYS'] = transact['INACTIVITY_DAYS'].apply(lambda x: 0 if x == -1 else x).astype(float)
 	transact = customerType2(transact)
 	print(transact.head(10))
@@ -61,7 +65,7 @@ def calculateTenure():
 	df['FIRST_TRANSACTION'] = pd.to_datetime(df['FIRST_TRANSACTION'])
 	df['LAST_TRANSACTION'] = pd.to_datetime(df['LAST_TRANSACTION'])
 	for i in range(len(df)):
-		if df.iloc[i]['CUSTOMERTYPE'] == 'PRESENT': tenure.append((pd.to_datetime('2019-08-31') - df.iloc[i]['FIRST_TRANSACTION']).days)
+		if df.iloc[i]['CUSTOMERTYPE'] == 'PRESENT': tenure.append((pd.to_datetime('2019-09-01') - df.iloc[i]['FIRST_TRANSACTION']).days)
 		else: tenure.append((df.iloc[i]['LAST_TRANSACTION'] - df.iloc[i]['FIRST_TRANSACTION']).days)
 	df['TENURE'] = tenure
 	print(df.head(10))
