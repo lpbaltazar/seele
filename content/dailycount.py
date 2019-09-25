@@ -28,7 +28,7 @@ def getFile(file1, file2 = None):
 
 	if file2:
 		df2 = readChunk(file2, sep = '\t')
-		df3.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "DAYOFWEEK(MIN(MODIFIEDDATE))":'DAYOFWEEK'}, inplace = True)
+		df2.rename(columns = {"DATE(MODIFIEDDATE)":'DATE', "DAYOFWEEK(MIN(MODIFIEDDATE))":'DAYOFWEEK'}, inplace = True)
 
 		df = pd.concat([df, df2])
 	
@@ -52,8 +52,15 @@ def getNumberofCustomers(df):
 	new_df['MONTH'] = new_df.DATE.apply(lambda x: x.strftime("%b")[:3])
 	new_df.sort_values('DATE', inplace = True)
 	new_df.set_index('DATE', inplace = True)
+	return new_df
 
-def plot(new_df, ylim = None):
+def  line_format(x):
+	month = x.strftime("%b")[:3]
+	day = x.day
+	return month+str(day)
+
+def plotDF(new_df, ylim = None):
+	print(new_df.head())
 	fig, axes = plt.subplots(2,4)
 	x = 0
 	y = 0
@@ -72,10 +79,10 @@ def plot(new_df, ylim = None):
 		if y == 4:
 			y = 0
 			x = x + 1
-	plt.show()
+		plt.show()
 
 if __name__ == '__main__':
 	df = getFile("../data/reg_origshow.csv", "../data/reg_origmovie.csv")
 	df = getNumberofCustomers(df)
-	plot(df, 90000)
+	plotDF(df, 90000)
 
