@@ -60,8 +60,10 @@ def  line_format(x):
 	return month+str(day)
 
 def plotDF(new_df, outfile, ylim = None):
+	new_df = getFile("../data/reg_current.csv", "../data/reg_old.csv")
+	new_df = getNumberofCustomers(new_df)
 	print(new_df.head())
-	fig, axes = plt.subplots(1,6, sharey = 'row')
+	fig, axes = plt.subplots(3,7, sharey = 'row')
 	count = 0
 	for i in new_df.MONTH.unique():
 		temp = new_df.loc[new_df.MONTH == i]
@@ -72,24 +74,60 @@ def plotDF(new_df, outfile, ylim = None):
 		plot.set_ylabel('NUMBER OF CUSTOMERS')
 		plot.set_xlabel('')
 		plot.set_xticklabels(map(lambda z: line_format(z), temp.index))
-		plot.tick_params(axis = 'x', which = 'major', labelsize = 6)
+		plot.tick_params(axis = 'x', which = 'major', labelsize = 4)
 		plot.set_title(i)
 		# plot.tick_params(axis = 'both', which = 'minor', labelsize = 10)
 		if ylim:
-			plot.set_ylim(0,ylim)
+			plot.set_ylim(0,500000)
+		count = count + 1
+	# fig.delaxes(axes[1,3])
+
+	new_df = getFile("../data/reg_origshow.csv", "../data/reg_origmovie.csv")
+	new_df = getNumberofCustomers(new_df)
+	print(new_df.head())
+	count = 0
+	for i in new_df.MONTH.unique():
+		temp = new_df.loc[new_df.MONTH == i]
+		xcoords = temp.loc[(temp.DAYOFWEEK == '1') | (temp.DAYOFWEEK == '7')].index
+		print(xcoords)
+		temp = temp[['USERID']]
+		plot = temp.plot(kind = 'bar', legend = False, ax = axes[1, count])
+		plot.set_ylabel('NUMBER OF CUSTOMERS')
+		plot.set_xlabel('')
+		plot.set_xticklabels(map(lambda z: line_format(z), temp.index))
+		plot.tick_params(axis = 'x', which = 'major', labelsize = 4)
+		plot.set_title(i)
+		# plot.tick_params(axis = 'both', which = 'minor', labelsize = 10)
+		if ylim:
+			plot.set_ylim(0,500000)
+		count = count + 1
+
+	new_df = getFile("../data/reg_movie.csv")
+	new_df = getNumberofCustomers(new_df)
+	print(new_df.head())
+	count = 0
+	for i in new_df.MONTH.unique():
+		temp = new_df.loc[new_df.MONTH == i]
+		xcoords = temp.loc[(temp.DAYOFWEEK == '1') | (temp.DAYOFWEEK == '7')].index
+		print(xcoords)
+		temp = temp[['USERID']]
+		plot = temp.plot(kind = 'bar', legend = False, ax = axes[2, count])
+		plot.set_ylabel('NUMBER OF CUSTOMERS')
+		plot.set_xlabel('')
+		plot.set_xticklabels(map(lambda z: line_format(z), temp.index))
+		plot.tick_params(axis = 'x', which = 'major', labelsize = 4)
+		plot.set_title(i)
+		# plot.tick_params(axis = 'both', which = 'minor', labelsize = 10)
+		if ylim:
+			plot.set_ylim(0,500000)
 		count = count + 1
 	# fig.delaxes(axes[1,3])
 	plt.tight_layout()
 	plt.savefig(outfile, dpi = 600)
 
 if __name__ == '__main__':
-	df = getFile("../data/reg_current.csv", "../data/reg_old.csv")
-	df = getNumberofCustomers(df)
-	plotDF(df, 'visualization/daily/channel2_oneline.png', 500000)
-	df = getFile("../data/reg_origshow.csv", "../data/reg_origmovie.csv")
-	df = getNumberofCustomers(df)
-	plotDF(df, 'visualization/daily/original_oneline.png', 500000)
+	
 	df = getFile("../data/reg_movie.csv")
 	df = getNumberofCustomers(df)
-	plotDF(df, 'visualization/daily/movie_oneline.png', 500000)
+	plotDF(df, 'visualization/daily/combined.png', 500000)
 
