@@ -152,6 +152,7 @@ def plotWeeklyRegularity2(ylim = 25000):
 		temp = df.loc[df.WEEK == i]
 		new_df = pd.DataFrame(index = [1,2,3,4,5,6,7], columns = ['COUNT'])
 		new_df.index.name = 'REGULARITY'
+		print(len(temp))
 		for j in range(1, 8):
 			temp2 = temp.loc[temp.RWEEK == j]
 			new_df.loc[j]['COUNT'] = len(temp2)
