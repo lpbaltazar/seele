@@ -34,5 +34,6 @@ movie = movie.merge(diverse, how = 'right', on = 'USERID')
 
 current = pd.concat([current, old, origmovie, origshow, movie])
 
-current['WEEK'] = pd.to_datetime(current['WEEK']).strftime("%U")
+current['WEEK'] = pd.to_datetime(current['DATE'])
+current['WEEK'] = current['WEEK'].apply(lambda x: x.strftime("%U"))
 print(current['WEEK'])
