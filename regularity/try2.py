@@ -41,7 +41,7 @@ def clustering(X):
 
 	distortions = []
 
-	for k in range(2, 15):
+	for k in range(2, 30):
 
 		print("Clustering using k: ", k)
 
@@ -55,7 +55,7 @@ def clustering(X):
 
 
 def elbowPlot(distortions):
-	k = np.arange(2, 15)
+	k = np.arange(2, 30)
 
 	plt.figure(figsize=(12, 10))
 	plt.plot(k, distortions, marker='o')
