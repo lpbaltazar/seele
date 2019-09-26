@@ -26,6 +26,7 @@ def kmeansClustering(X, k):
 	distortion = kmeans.inertia_
 
 	centers = np.array(kmeans.cluster_centers_)
+	silhouette_score(X, labels, k, centers)
 
 	return labels, distortion, centers
 
@@ -101,6 +102,5 @@ if __name__ == '__main__':
 
 	labels,_,centers = kmeansClustering(X, int(k))
 	print(centers)
-	silhouetteScore(X, labels, k, centers)
 
 
