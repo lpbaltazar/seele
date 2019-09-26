@@ -68,7 +68,7 @@ def elbowPlot(distortions):
 
 def silhouetteScore(X, labels, k, centers):
 	silhouette_avg = silhouette_score(X, labels)
-	print("Silhouette Score for Cluster=5: ", silhouette_avg)
+	print("Silhouette Score for Cluster={}: {}".format(k, silhouette_avg))
 
 if __name__ == '__main__':
 	file = 'results/feb3_weekly_regularity.csv'
@@ -99,6 +99,7 @@ if __name__ == '__main__':
 
 	k = input('enter chosen number of clusters: ')
 
-	_,_,centers = kmeansClustering(X, int(k))
+	labels,_,centers = kmeansClustering(X, int(k))
+	silhouetteScore(X, labels, k, centers)
 
 
