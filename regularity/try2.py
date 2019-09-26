@@ -100,6 +100,7 @@ if __name__ == '__main__':
 	k = input('enter chosen number of clusters: ')
 
 	labels,_,centers = kmeansClustering(X, int(k))
+	print(centers)
 	silhouetteScore(X, labels, k, centers)
 
 
