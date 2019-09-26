@@ -97,4 +97,8 @@ if __name__ == '__main__':
 
 	clustering(X)
 
+	k = input('enter chosen number of clusters: ')
+
+	_,_,centers = kmeansClustering(X, int(k))
+
 
