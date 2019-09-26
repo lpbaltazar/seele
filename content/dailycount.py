@@ -68,7 +68,7 @@ def plotDF(new_df, outfile, ylim = None):
 		xcoords = temp.loc[(temp.DAYOFWEEK == '1') | (temp.DAYOFWEEK == '7')].index
 		print(xcoords)
 		temp = temp[['USERID']]
-		plot = temp.plot(kind = 'bar', legend = False, ax = axes[x, y])
+		plot = temp.plot(kind = 'bar', legend = False, ax = axes[0, count])
 		plot.set_ylabel('NUMBER OF CUSTOMERS')
 		plot.set_xlabel('')
 		plot.set_xticklabels(map(lambda z: line_format(z), temp.index))
