@@ -155,31 +155,32 @@ def plotWeeklyRegularity2(ylim = 25000):
 		for j in range(1, 8):
 			temp2 = temp.loc[temp.RWEEK == j]
 			new_df.loc[j]['COUNT'] = len(temp2)
-		plot = new_df.plot(kind = 'bar', legend = False, ax = axes[x, y], rot = 0)
-		# plot.set_ylabel('NUMBER OF CUSTOMERS')
-		# plot.set_xlabel('REGULARITY')
-		plot.tick_params(axis = 'both', which = 'major', labelsize = 6, pad = 2)
-		plot.set_title(i, size = 6, pad = 2)
-		x_axis = plot.axes.get_xaxis()
-		x_label = x_axis.get_label()
-		x_label.set_visible(False)
-		if ylim:
-			plot.set_ylim(0,ylim)
-		y = y + 1
-		if y == 4:
-			y = 0
-			x = x + 1
-	fig.delaxes(axes[7,3])
-	fig.delaxes(axes[7,2])
-	# fig.tight_layout()
-	# plt.rcParams['figure.constrained_layout.use'] = True
-	# plt.subplots_adjust(bottom = 0.1)
-	plt.savefig("weekly_customerregfreq.png", dpi = 600)
+			print(new_df)
+	# 	plot = new_df.plot(kind = 'bar', legend = False, ax = axes[x, y], rot = 0)
+	# 	# plot.set_ylabel('NUMBER OF CUSTOMERS')
+	# 	# plot.set_xlabel('REGULARITY')
+	# 	plot.tick_params(axis = 'both', which = 'major', labelsize = 6, pad = 2)
+	# 	plot.set_title(i, size = 6, pad = 2)
+	# 	x_axis = plot.axes.get_xaxis()
+	# 	x_label = x_axis.get_label()
+	# 	x_label.set_visible(False)
+	# 	if ylim:
+	# 		plot.set_ylim(0,ylim)
+	# 	y = y + 1
+	# 	if y == 4:
+	# 		y = 0
+	# 		x = x + 1
+	# fig.delaxes(axes[7,3])
+	# fig.delaxes(axes[7,2])
+	# # fig.tight_layout()
+	# # plt.rcParams['figure.constrained_layout.use'] = True
+	# # plt.subplots_adjust(bottom = 0.1)
+	# plt.savefig("weekly_customerregfreq.png", dpi = 600)
 
 if __name__ == '__main__':
 	# df = pd.read_csv('results/countCustomerTypePerRegularity.csv')
 	# print(df)
 	# plotRegularityFreq()
 	# plotRegularityTenure()
-	plotWeeklyRegularity()
+	# plotWeeklyRegularity()
 	plotWeeklyRegularity2()
