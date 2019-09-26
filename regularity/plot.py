@@ -87,7 +87,7 @@ def barPlot(data, xlabel, ylabel, outfile, title = None, print_number = False, s
 		plt.show()
 	plt.clf()
 
-def plotWeeklyRegularity(ylim = 20000):
+def plotWeeklyRegularity(ylim = 25000):
 	file = 'results/feb3_weekly_regularity.csv'
 	df = readChunk(file, header = None)
 	df.rename(columns = {0:'WEEK', 8:'RWEEK', 9:'USERID'}, inplace = True)
@@ -126,12 +126,10 @@ def plotWeeklyRegularity(ylim = 20000):
 			x = x + 1
 	fig.delaxes(axes[7,3])
 	fig.delaxes(axes[7,2])
-	# fig.tight_layout()
-	# plt.rcParams['figure.constrained_layout.use'] = True
-	# plt.subplots_adjust(bottom = 0.1)
-	plt.show()
+	plt.savefig("weekly_regfreq.png", dpi = 600)
 
-def plotWeeklyRegularity2(ylim = None):
+
+def plotWeeklyRegularity2(ylim = 25000):
 	file = 'results/feb3_weekly_regularity.csv'
 	df = readChunk(file, header = None)
 	df.rename(columns = {0:'WEEK', 8:'RWEEK', 9:'USERID'}, inplace = True)
@@ -176,11 +174,12 @@ def plotWeeklyRegularity2(ylim = None):
 	# fig.tight_layout()
 	# plt.rcParams['figure.constrained_layout.use'] = True
 	# plt.subplots_adjust(bottom = 0.1)
-	plt.show()
+	plt.savefig("weekly_customerregfreq.png", dpi = 600)
 
 if __name__ == '__main__':
 	# df = pd.read_csv('results/countCustomerTypePerRegularity.csv')
 	# print(df)
 	# plotRegularityFreq()
 	# plotRegularityTenure()
+	plotWeeklyRegularity()
 	plotWeeklyRegularity2()

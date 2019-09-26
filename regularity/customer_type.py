@@ -54,7 +54,7 @@ def getCustomerType():
 def customerType2(df):
 	ctype = []
 	for i in range(len(df)):
-		if df.iloc[i]['INACTIVITY_DAYS'] <= df.iloc[i]['RWEEK'] + 5: ctype.append('PRESENT')
+		if df.iloc[i]['INACTIVITY_DAYS'] <= df.iloc[i]['RWEEK'] + 7: ctype.append('ACTIVE')
 		else: ctype.append('LOST')
 	df['CUSTOMERTYPE'] = ctype
 	return df
