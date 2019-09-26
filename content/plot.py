@@ -40,19 +40,19 @@ def distrib_combined():
 	channel2 = channel2.merge(df2, how = 'right', on = 'USERID')
 	movie = pd.read_csv('results/movie.csv')
 	movie = movie.merge(df2, how = 'right', on = 'USERID')
-	origmovie = pd.read_csv('results/origmovie.csv')
-	origmovie = origmovie.merge(df2, how = 'right', on = 'USERID')
-	origshow = pd.read_csv('results/origshow.csv')
-	origshow = origshow.merge(df2, how = 'right', on = 'USERID')
+	# origmovie = pd.read_csv('results/origmovie.csv')
+	# origmovie = origmovie.merge(df2, how = 'right', on = 'USERID')
+	# origshow = pd.read_csv('results/origshow.csv')
+	# origshow = origshow.merge(df2, how = 'right', on = 'USERID')
 
 	for col in ['RECENCY', 'FREQUENCY', 'ENGAGEMENT']:
 		plot = sns.distplot(a = channel2[col].values, kde = True, hist = False, label = 'CHANNEL 2')
 		plot = sns.distplot(a = movie[col].values, kde = True, hist = False, label = 'MOVIE')
-		plot = sns.distplot(a = origmovie[col].values, kde = True, hist = False, label = 'ORIGINAL MOVIE')
-		plot = sns.distplot(a = origshow[col].values, kde = True, hist = False, label = 'ORIGINAL SHOW')
+		# plot = sns.distplot(a = origmovie[col].values, kde = True, hist = False, label = 'ORIGINAL MOVIE')
+		# plot = sns.distplot(a = origshow[col].values, kde = True, hist = False, label = 'ORIGINAL SHOW')
 		plot.set_xlabel(col)
 		plot.set_title(col)
-		plt.savefig('visualization/'+col+'.png', dpi = 600)
+		plt.savefig('visualization/lower'+col+'.png', dpi = 600)
 		plt.clf()
 
 

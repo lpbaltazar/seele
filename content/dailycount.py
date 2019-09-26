@@ -61,9 +61,8 @@ def  line_format(x):
 
 def plotDF(new_df, outfile, ylim = None):
 	print(new_df.head())
-	fig, axes = plt.subplots(2,4, sharey = 'row')
-	x = 0
-	y = 0
+	fig, axes = plt.subplots(1,6, sharey = 'row')
+	count = 0
 	for i in new_df.MONTH.unique():
 		temp = new_df.loc[new_df.MONTH == i]
 		xcoords = temp.loc[(temp.DAYOFWEEK == '1') | (temp.DAYOFWEEK == '7')].index
@@ -78,16 +77,19 @@ def plotDF(new_df, outfile, ylim = None):
 		# plot.tick_params(axis = 'both', which = 'minor', labelsize = 10)
 		if ylim:
 			plot.set_ylim(0,ylim)
-		y = y + 1
-		if y == 4:
-			y = 0
-			x = x + 1
-	fig.delaxes(axes[1,3])
+		count = count + 1
+	# fig.delaxes(axes[1,3])
 	plt.tight_layout()
 	plt.savefig(outfile, dpi = 600)
 
 if __name__ == '__main__':
 	df = getFile("../data/reg_current.csv", "../data/reg_old.csv")
 	df = getNumberofCustomers(df)
-	plotDF(df, 'visualization/daily/channel2.png', 500000)
+	plotDF(df, 'visualization/daily/channel2_oneline.png', 500000)
+	df = getFile("../data/reg_origshow.csv", "../data/reg_origmovie.csv")
+	df = getNumberofCustomers(df)
+	plotDF(df, 'visualization/daily/original_oneline.png', 500000)
+	df = getFile("../data/reg_movie.csv")
+	df = getNumberofCustomers(df)
+	plotDF(df, 'visualization/daily/movie_oneline.png', 500000)
 
