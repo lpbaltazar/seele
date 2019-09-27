@@ -24,14 +24,9 @@ def transactionDates():
 	toCSV(df2, 'results/transaction_dates.csv', index = False)
 
 
-def averageRegularity():
-	file = 'results/feb3_weekly_regularity.csv'
+def averageRegularity(file):
 	df = readChunk(file, header = None)
 	df.rename(columns = {0:'WEEK', 8:'RWEEK', 9:'USERID'}, inplace = True)
-	file2 = 'results/feb3_regularity.csv'
-	df2 = readChunk(file2, header = None)
-	df2.rename(columns = {0:'WEEK', 8:'RWEEK', 9:'USERID'}, inplace = True)
-	df = pd.concat([df, df2])
 	print('Number of customers: ', len(df.USERID.unique()))
 	df['RWEEK'] = df['RWEEK'].astype(int)
 	new_df = df.groupby('USERID')['RWEEK'].mean().to_frame()
@@ -72,7 +67,7 @@ def calculateTenure():
 	toCSV(df, 'results/tenure.csv', index = False)
 
 if __name__ == '__main__':
-	averageRegularity()
+	averageRegularity("status/results/regularity_combined.csv")
 	transactionDates()
 	getCustomerType()
 	calculateTenure()
