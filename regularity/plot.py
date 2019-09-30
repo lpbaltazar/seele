@@ -90,7 +90,7 @@ def barPlot(data, xlabel, ylabel, outfile, title = None, print_number = False, s
 def plotWeeklyRegularity(week = None, ylim = None, outfile = None):
 	df = readChunk("status/results/regularity_combined.csv")
 	print(len(df))
-	if week:
+	if isintance(week, pd.DataFrame):
 		df = df.merge(week, how = 'right', on = 'USERID')	
 
 	print('Number of customers: ', len(df.USERID.unique()))
@@ -210,6 +210,7 @@ if __name__ == '__main__':
 	df = pd.read_csv("../data/inception_week.csv")
 	print(df.WEEK.unique())
 	for i in sorted(df.WEEK.unique()):
+		print(i)
 		temp = df.loc[df.WEEK == i]
 		outfile = "results/weekly/regfreq/"+str(i)+".png"
-		plotWeeklyRegularity(week = temp, outfile)
+		plotWeeklyRegularity(week = temp, outfile = outfile)
