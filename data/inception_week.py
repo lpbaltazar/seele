@@ -21,6 +21,7 @@ print(len(df))
 df.drop_duplicates(subset = ['USERID'], keep = 'first', inplace = True)
 print(len(df))
 
+df.rename(columns = {'WEEK':'INCEPTION_WEEK'}, inplace = True)
 toCSV(df[['USERID', 'INCEPTION_WEEK']], "inception_week.csv", index = False)
 
 
