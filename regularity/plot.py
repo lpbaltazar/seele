@@ -87,8 +87,10 @@ def barPlot(data, xlabel, ylabel, outfile, title = None, print_number = False, s
 		plt.show()
 	plt.clf()
 
-def plotWeeklyRegularity(file, ylim = None):
-	df = readChunk(file)
+def plotWeeklyRegularity(week = None, ylim = None, outfile = None):
+	df = readChunk("status/results/regularity_combined.csv")
+	if week:
+		df = df.merge(week, how = 'right', on = 'USERID')	
 
 	print('Number of customers: ', len(df.USERID.unique()))
 	df['RWEEK'] = df['RWEEK'].astype(int)
@@ -121,7 +123,8 @@ def plotWeeklyRegularity(file, ylim = None):
 			x = x + 1
 	fig.delaxes(axes[7,3])
 	fig.delaxes(axes[7,2])
-	plt.savefig("weekly_regfreq_many.png", dpi = 600)
+	if outfile:
+		plt.savefig(outfile, dpi = 600)
 
 
 def plotWeeklyRegularity2(file, ylim = None):
@@ -173,5 +176,11 @@ if __name__ == '__main__':
 	# print(df)
 	# plotRegularityFreq()
 	# plotRegularityTenure()
-	plotWeeklyRegularity("status/results/regularity_combined.csv")
-	plotWeeklyRegularity2("status/results/regularity_combined.csv")
+	df = readChunk("week_present_and_joined.csv")
+	df.joinedweek = df.joinedweek.astype(int)
+	print(df.joinedweek.unique())
+	for i in sorted(df.joinedweek.unique()):
+		temp = df.loc[df.joinedweek == i]
+		outfile = "results/weekly/regfreq/"+str(i)+".png"
+		plotWeeklyRegularity(week = temp)
+	# plotWeeklyRegularity2("status/results/regularity_combined.csv")
