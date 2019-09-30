@@ -133,7 +133,7 @@ def plotWeeklyRegularity(weekno = None, week = None, ylim = None, outfile = None
 
 
 def plotWeeklyRegularity2(weekno = None, week = None, ylim = None, outfile = None, regularity_type = 'mode', mode_type = None):
-	df = readChunk(file)
+	df = readChunk("status/results/regularity_combined.csv")
 	print(len(df))
 	if isinstance(week, pd.DataFrame):
 		df = df.merge(week, how = 'right', on = 'USERID')	
@@ -161,7 +161,7 @@ def plotWeeklyRegularity2(weekno = None, week = None, ylim = None, outfile = Non
 	fig, axes = plt.subplots(8,4, sharey = 'row', constrained_layout = True)
 	x = 0
 	y = 0
-	for i in df.WEEK.unique():
+	for i in sorted(df.WEEK.unique()):
 		temp = df.loc[df.WEEK == i]
 		new_df = pd.DataFrame(index = [1,2,3,4,5,6,7], columns = ['COUNT'])
 		new_df.index.name = 'REGULARITY'
@@ -228,14 +228,11 @@ if __name__ == '__main__':
 	# plotWeeklyRegularity2("status/results/regularity_combined.csv")
 	# plotWeeklyRegularity3("results/feb3_weekly_regularity.csv", "results/feb3_regularity.csv")
 	# plotWeeklyRegularity(outfile = "results/all.png", ylim = 300000)
-	plotRegularityFreq()
-	plotWeeklyRegularity(outfile = "results/weekly_regfreq_many.png", ylim = 300000)
-	plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode')
+	# plotRegularityFreq()
+	# plotWeeklyRegularity(outfile = "results/weekly_regfreq_many.png", ylim = 300000)
+	plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode', ylim = 300000)
 
-	# df = pd.read_csv("../data/inception_week.csv")
-	# print(df.INCEPTION_WEEK.unique())
-	# for i in sorted(df.INCEPTION_WEEK.unique()):
-	# 	print(i)
-	# 	temp = df.loc[df.INCEPTION_WEEK == i]
-	# 	outfile = "results/weekly/regfreq/"+str(i)+".png"
-	# 	plotWeeklyRegularity(i, week = temp, outfile = outfile)
+	df = pd.read_csv("../data/week5_frequency_engagement.csv")
+	print
+	plotWeeklyRegularity(week = temp, outfile = "results/weekly/regfreq/week5.png")
+	plotWeeklyRegularity2(week = temp, outfile = "results/weekly/customerregfreq/week5.png")
