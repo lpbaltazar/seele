@@ -132,12 +132,11 @@ def plotWeeklyRegularity(weekno = None, week = None, ylim = None, outfile = None
 		plt.savefig(outfile, dpi = 600)
 
 
-def plotWeeklyRegularity2(weekno = None, week = None, ylim = None, outfile = None, regularity_type = 'mode', mode_type = None):
+def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = None, regularity_type = 'mode', mode_type = None):
 	df = readChunk("status/results/regularity_combined.csv")
 	print(len(df))
-	if isinstance(week, pd.DataFrame):
-		df = df.merge(week, how = 'right', on = 'USERID')	
-		df.drop('INCEPTION_WEEK', axis = 1, inplace = True)
+	if custids:
+		df = df[df['USERID'].isin(temp)]
 
 	print('Number of customers: ', len(df.USERID.unique()))
 	
@@ -147,7 +146,6 @@ def plotWeeklyRegularity2(weekno = None, week = None, ylim = None, outfile = Non
 	print('Number of customers: ', len(df.USERID.unique()))
 	df['RWEEK'] = df['RWEEK'].astype(int)
 	df['WEEK'] = df["WEEK"].astype(int)
-	df.sort_values('WEEK', inplace = True)
 	df = df.loc[df.WEEK != 201904]
 	if regularity_type == 'mode':
 		if mode_type == 'min':
@@ -157,7 +155,7 @@ def plotWeeklyRegularity2(weekno = None, week = None, ylim = None, outfile = Non
 		else:
 			df = df.groupby(['USERID', 'WEEK'])['RWEEK'].agg(lambda x: pd.Series.mode(x)[0]).to_frame()
 	df.reset_index(inplace = True)
-	print(df)
+	print(df.head())
 	fig, axes = plt.subplots(8,4, sharey = 'row', constrained_layout = True)
 	x = 0
 	y = 0
@@ -230,9 +228,10 @@ if __name__ == '__main__':
 	# plotWeeklyRegularity(outfile = "results/all.png", ylim = 300000)
 	# plotRegularityFreq()
 	# plotWeeklyRegularity(outfile = "results/weekly_regfreq_many.png", ylim = 300000)
-	plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode', ylim = 300000)
-
-	df = pd.read_csv("../data/week5_frequency_engagement.csv")
-	print
-	plotWeeklyRegularity(week = temp, outfile = "results/weekly/regfreq/week5.png")
-	plotWeeklyRegularity2(week = temp, outfile = "results/weekly/customerregfreq/week5.png")
+	# plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode', ylim = 300000)
+	weekno = sys.argv[1]
+	file = "../data/week"+weeknno+"5_frequency_engagement.csv"
+	df = pd.read_csv(file)
+	custids = df.userid.unqiue()
+	plotWeeklyRegularity(custids, weekno = weekno, outfile = "results/weekly/regfreq/week"+weekno+".png")
+	plotWeeklyRegularity2(custids, weekno = weekno, outfile = "results/weekly/customerregfreq/week"+weekno+".png")
