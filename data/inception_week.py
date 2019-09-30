@@ -21,6 +21,6 @@ print(len(df))
 df.drop_duplicates(subset = ['USERID'], keep = 'first', inplace = True)
 print(len(df))
 
-toCSV(df[['USERID', 'WEEK']], "inception_week.csv", index = False)
+toCSV(df[['USERID', 'INCEPTION_WEEK']], "inception_week.csv", index = False)
 
 
