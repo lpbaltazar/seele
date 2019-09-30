@@ -27,13 +27,13 @@ def plotRegularityFreq():
 	print('Number of customers: ', len(df.USERID.unique()))
 	print(df.head())
 	df['RWEEK'] = df['RWEEK'].astype(int)
-	# new_df = pd.DataFrame(index = [1,2,3,4,5,6,7], columns = ['COUNT'])
-	# new_df.index.name = 'REGULARITY'
-	# for i in range(1, 8):
-	# 	temp = df.loc[df.RWEEK == i]
-	# 	new_df.loc[i]['COUNT'] = len(temp)
-	# print(new_df.head())
-	# barPlot(new_df, 'REGULARITY', 'COUNT', 'regfreq_many.png', print_number = True, savefig = True)
+	new_df = pd.DataFrame(index = [1,2,3,4,5,6,7], columns = ['COUNT'])
+	new_df.index.name = 'REGULARITY'
+	for i in range(1, 8):
+		temp = df.loc[df.RWEEK == i]
+		new_df.loc[i]['COUNT'] = len(temp)
+	print(new_df.head())
+	barPlot(new_df, 'REGULARITY', 'COUNT', 'regfreq_many.png', print_number = True, savefig = True)
 
 	new_df = df.groupby('USERID')['RWEEK'].agg(lambda x: pd.Series.mode(x)[0]).to_frame()
 	print(new_df.head())
@@ -132,15 +132,30 @@ def plotWeeklyRegularity(weekno = None, week = None, ylim = None, outfile = None
 		plt.savefig(outfile, dpi = 600)
 
 
-def plotWeeklyRegularity2(file, ylim = None):
+def plotWeeklyRegularity2(weekno = None, week = None, ylim = None, outfile = None, regularity_type = 'mode', mode_type = None):
 	df = readChunk(file)
+	print(len(df))
+	if isinstance(week, pd.DataFrame):
+		df = df.merge(week, how = 'right', on = 'USERID')	
+		df.drop('INCEPTION_WEEK', axis = 1, inplace = True)
+
+	print('Number of customers: ', len(df.USERID.unique()))
+	
+	print(df.columns)
+	df.dropna(subset = ['RWEEK'], inplace = True)
 
 	print('Number of customers: ', len(df.USERID.unique()))
 	df['RWEEK'] = df['RWEEK'].astype(int)
 	df['WEEK'] = df["WEEK"].astype(int)
 	df.sort_values('WEEK', inplace = True)
 	df = df.loc[df.WEEK != 201904]
-	df = df.groupby(['USERID', 'WEEK'])['RWEEK'].mean().to_frame()
+	if regularity_type == 'mode':
+		if mode_type == 'min':
+			df = df.groupby('USERID')['RWEEK'].agg(lambda x: min(pd.Series.mode(x))).to_frame()
+		elif mode_type == 'max':
+			df = df.groupby('USERID')['RWEEK'].agg(lambda x: max(pd.Series.mode(x))).to_frame()
+		else:
+			df = df.groupby(['USERID', 'WEEK'])['RWEEK'].agg(lambda x: pd.Series.mode(x)[0]).to_frame()
 	df.reset_index(inplace = True)
 	print(df)
 	fig, axes = plt.subplots(8,4, sharey = 'row', constrained_layout = True)
@@ -174,7 +189,8 @@ def plotWeeklyRegularity2(file, ylim = None):
 	# fig.tight_layout()
 	# plt.rcParams['figure.constrained_layout.use'] = True
 	# plt.subplots_adjust(bottom = 0.1)
-	plt.savefig("weekly_customerregfreq_many.png", dpi = 600)
+	if outfile:
+		plt.savefig(outfile, dpi = 600)
 
 def plotWeeklyRegularity3(file, file2 = None, ylim = None):
 	df = readChunk(file, header = None)
@@ -213,6 +229,8 @@ if __name__ == '__main__':
 	# plotWeeklyRegularity3("results/feb3_weekly_regularity.csv", "results/feb3_regularity.csv")
 	# plotWeeklyRegularity(outfile = "results/all.png", ylim = 300000)
 	plotRegularityFreq()
+	plotWeeklyRegularity(outfile = "results/weekly_regfreq_many.png", ylim = 300000)
+	plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode')
 
 	# df = pd.read_csv("../data/inception_week.csv")
 	# print(df.INCEPTION_WEEK.unique())

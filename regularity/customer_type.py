@@ -24,12 +24,15 @@ def transactionDates():
 	toCSV(df2, 'results/transaction_dates.csv', index = False)
 
 
-def averageRegularity(file):
-	df = readChunk(file, header = None)
-	df.rename(columns = {0:'WEEK', 8:'RWEEK', 9:'USERID'}, inplace = True)
+def customerRegularity(file, regularity_type = 'mean'):
+	df = readChunk(file)
+	# df.rename(columns = {0:'WEEK', 8:'RWEEK', 9:'USERID'}, inplace = True)
 	print('Number of customers: ', len(df.USERID.unique()))
 	df['RWEEK'] = df['RWEEK'].astype(int)
-	new_df = df.groupby('USERID')['RWEEK'].mean().to_frame()
+	if regularity_type == 'mean':
+		new_df = df.groupby('USERID')['RWEEK'].mean().to_frame()
+	elif regularity_type == 'mode':
+		new_df = df.groupby('USERID')['RWEEK'].agg(lambda x: pd.Series.mode(x)[0]).to_frame()
 	new_df['RWEEK'] = round(new_df['RWEEK'])
 	toCSV(new_df, 'results/average_regularity.csv')
 
@@ -47,9 +50,12 @@ def getCustomerType():
 	toCSV(transact, 'results/customer_type.csv', index = False)
 
 def customerType2(df):
+	regularity_inverse = {1:7, 2:6, 3:5, 5:3, 6:2, 7:1}
+	df['RWEEK2'] = df.RWEEK
+	df.replace({"RWEEK2":regularity_inverse}, inplace = True)
 	ctype = []
 	for i in range(len(df)):
-		if df.iloc[i]['INACTIVITY_DAYS'] <= df.iloc[i]['RWEEK'] + 7: ctype.append('ACTIVE')
+		if df.iloc[i]['INACTIVITY_DAYS'] <= df.iloc[i]['RWEEK2'] + 7: ctype.append('ACTIVE')
 		else: ctype.append('LOST')
 	df['CUSTOMERTYPE'] = ctype
 	return df
@@ -67,7 +73,7 @@ def calculateTenure():
 	toCSV(df, 'results/tenure.csv', index = False)
 
 if __name__ == '__main__':
-	averageRegularity("status/results/regularity_combined.csv")
+	customerRegularity("status/results/regularity_combined.csv", regularity_type = 'mode')
 	transactionDates()
 	getCustomerType()
 	calculateTenure()
