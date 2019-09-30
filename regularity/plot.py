@@ -207,8 +207,7 @@ if __name__ == '__main__':
 	# plotWeeklyRegularity("status/results/regularity_combined.csv")
 	# plotWeeklyRegularity2("status/results/regularity_combined.csv")
 	# plotWeeklyRegularity3("results/feb3_weekly_regularity.csv", "results/feb3_regularity.csv")
-	df = readChunk("../data/inception_week.csv")
-	df.WEEK = df.WEEK.astype(int)
+	df = pd.read_csv("../data/inception_week.csv")
 	print(df.WEEK.unique())
 	for i in sorted(df.WEEK.unique()):
 		temp = df.loc[df.WEEK == i]
