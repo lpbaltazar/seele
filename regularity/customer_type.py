@@ -12,6 +12,7 @@ import numpy as np
 from utils import readChunk, toCSV
 
 def transactionDates():
+	print('getting first and last transaction dates of the customers..')
 	file = "results/first_and_last_transaction_correct.csv"
 	df = readChunk(file, header = None)
 	df.rename(columns = {0:'USERID', 1:'FIRST_TRANSACTION', 2:'LAST_TRANSACTION'}, inplace = True)
@@ -25,6 +26,7 @@ def transactionDates():
 
 
 def customerRegularity(file, regularity_type = 'mean'):
+	print('calculating regularity of type: ', regularity_type)
 	df = readChunk(file)
 	# df.rename(columns = {0:'WEEK', 8:'RWEEK', 9:'USERID'}, inplace = True)
 	print('Number of customers: ', len(df.USERID.unique()))
@@ -37,6 +39,7 @@ def customerRegularity(file, regularity_type = 'mean'):
 	toCSV(new_df, 'results/average_regularity.csv')
 
 def getCustomerType():
+	print('getting customer types...')
 	transact = readChunk('results/transaction_dates.csv')
 	aver = readChunk('results/average_regularity.csv')
 	transact = transact.merge(aver, how = 'left', on = 'USERID')
@@ -61,12 +64,13 @@ def customerType2(df):
 	return df
 
 def calculateTenure():
+	print('calculating tenure of the active and lost customers..')
 	df = readChunk('results/customer_type.csv')
 	tenure = []
 	df['FIRST_TRANSACTION'] = pd.to_datetime(df['FIRST_TRANSACTION'])
 	df['LAST_TRANSACTION'] = pd.to_datetime(df['LAST_TRANSACTION'])
 	for i in range(len(df)):
-		if df.iloc[i]['CUSTOMERTYPE'] == 'PRESENT': tenure.append((pd.to_datetime('2019-09-01') - df.iloc[i]['FIRST_TRANSACTION']).days)
+		if df.iloc[i]['CUSTOMERTYPE'] == 'ACTIVE': tenure.append((pd.to_datetime('2019-09-01') - df.iloc[i]['FIRST_TRANSACTION']).days)
 		else: tenure.append((df.iloc[i]['LAST_TRANSACTION'] - df.iloc[i]['FIRST_TRANSACTION']).days)
 	df['TENURE'] = tenure
 	print(df.head(10))
