@@ -94,6 +94,8 @@ def plotWeeklyRegularity(week = None, ylim = None, outfile = None):
 		df = df.merge(week, how = 'right', on = 'USERID')	
 
 	print('Number of customers: ', len(df.USERID.unique()))
+	df.drop('INCEPTION_WEEK', axis = 1, inplace = True)
+	print(df.columns)
 	df['RWEEK'] = df['RWEEK'].astype(int)
 	df['WEEK'] = df["WEEK"].astype(int)
 	df.sort_values('WEEK', inplace = True)
@@ -208,9 +210,9 @@ if __name__ == '__main__':
 	# plotWeeklyRegularity2("status/results/regularity_combined.csv")
 	# plotWeeklyRegularity3("results/feb3_weekly_regularity.csv", "results/feb3_regularity.csv")
 	df = pd.read_csv("../data/inception_week.csv")
-	print(df.WEEK.unique())
-	for i in sorted(df.WEEK.unique()):
+	print(df.INCEPTION_WEEK.unique())
+	for i in sorted(df.INCEPTION_WEEK.unique()):
 		print(i)
-		temp = df.loc[df.WEEK == i]
+		temp = df.loc[df.INCEPTION_WEEK == i]
 		outfile = "results/weekly/regfreq/"+str(i)+".png"
 		plotWeeklyRegularity(week = temp, outfile = outfile)
