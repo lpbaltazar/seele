@@ -87,8 +87,11 @@ def barPlot(data, xlabel, ylabel, outfile, title = None, print_number = False, s
 		plt.show()
 	plt.clf()
 
-def plotWeeklyRegularity(file, ylim = None):
-	df = readChunk(file)
+def plotWeeklyRegularity(week = None, ylim = None, outfile = None):
+	df = readChunk("status/results/regularity_combined.csv")
+	print(len(df))
+	if week:
+		df = df.merge(week, how = 'right', on = 'USERID')	
 
 	print('Number of customers: ', len(df.USERID.unique()))
 	df['RWEEK'] = df['RWEEK'].astype(int)
@@ -121,7 +124,8 @@ def plotWeeklyRegularity(file, ylim = None):
 			x = x + 1
 	fig.delaxes(axes[7,3])
 	fig.delaxes(axes[7,2])
-	plt.savefig("weekly_regfreq_many.png", dpi = 600)
+	if outfile:
+		plt.savefig(outfile, dpi = 600)
 
 
 def plotWeeklyRegularity2(file, ylim = None):
@@ -194,33 +198,6 @@ def plotWeeklyRegularity3(file, file2 = None, ylim = None):
 		plot.text(i, new_df.iloc[i]['USERID'], new_df.iloc[i]['USERID'], horizontalalignment = 'center')
 	plot.set_xlabel('REGULARITY')
 	plt.savefig("weekly_average_regularity.png", dpi = 300)
-	# fig, axes = plt.subplots(8,4, sharey = 'row', constrained_layout = True)
-	# x = 0
-	# y = 0
-	# for i in df.WEEK.unique():
-	# 	temp = df.loc[df.WEEK == i]
-	# 	new_df = pd.DataFrame(index = [1,2,3,4,5,6,7], columns = ['COUNT'])
-	# 	new_df.index.name = 'REGULARITY'
-	# 	for j in range(1, 8):
-	# 		temp2 = temp.loc[temp.RWEEK == j]
-	# 		new_df.loc[j]['COUNT'] = len(temp2)
-	# 	plot = new_df.plot(kind = 'bar', legend = False, ax = axes[x, y], rot = 0)
-	# 	# plot.set_ylabel('NUMBER OF CUSTOMERS')
-	# 	# plot.set_xlabel('REGULARITY')
-	# 	plot.tick_params(axis = 'both', which = 'major', labelsize = 6, pad = 2)
-	# 	plot.set_title(i, size = 6, pad = 2)
-	# 	x_axis = plot.axes.get_xaxis()
-	# 	x_label = x_axis.get_label()
-	# 	x_label.set_visible(False)
-	# 	if ylim:
-	# 		plot.set_ylim(0,ylim)
-	# 	y = y + 1
-	# 	if y == 4:
-	# 		y = 0
-	# 		x = x + 1
-	# fig.delaxes(axes[7,3])
-	# fig.delaxes(axes[7,2])
-	# plt.savefig("weekly_regfreq_many.png", dpi = 600)
 
 if __name__ == '__main__':
 	# df = pd.read_csv('results/countCustomerTypePerRegularity.csv')
@@ -229,4 +206,11 @@ if __name__ == '__main__':
 	# plotRegularityTenure()
 	# plotWeeklyRegularity("status/results/regularity_combined.csv")
 	# plotWeeklyRegularity2("status/results/regularity_combined.csv")
-	plotWeeklyRegularity3("results/feb3_weekly_regularity.csv", "results/feb3_regularity.csv")
+	# plotWeeklyRegularity3("results/feb3_weekly_regularity.csv", "results/feb3_regularity.csv")
+	df = readChunk("../data/inception_week.csv")
+	df.WEEK = df.WEEK.astype(int)
+	print(df.WEEK.unique())
+	for i in sorted(df.WEEK.unique()):
+		temp = df.loc[df.WEEK == i]
+		outfile = "results/weekly/regfreq/"+str(i)+".png"
+		plotWeeklyRegularity(week = temp, outfile)
