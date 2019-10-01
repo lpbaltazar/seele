@@ -2,7 +2,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 import sys
-sys.path.append("../")
+sys.path.append("../../")
 
 import os
 import csv
@@ -16,10 +16,12 @@ file = sys.argv[1]
 outfile = sys.argv[2]
 df = readChunk(file, header = None)
 df.rename(columns = {0:'USERID', 1:'SESSIONID', 2:'MONTH', 3:'WEEK', 4:'DATE', 5:'DAY_OF_WEEK'}, inplace = True)
-df['MONTH'] = df['MONTH'][-2:]
-df['DATE'] = df['DATE'][-2:]
+df['MONTH'] = df['MONTH'].apply(lambda x: x[-2:])
+df['DATE'] = df['DATE'].apply(lambda x: [-2:])
 df['MONTH_DATE'] = df['MONTH']+df['DATE']
 print(df.MONTH.unique())
+print(df.DATE.unique())
+print(df.MONTH_DATE.unique())
 print(len(df))
 df.drop_duplicates(subset = 'MONTH_DATE', keep = 'first', inplace = True)
 print(len(df))
