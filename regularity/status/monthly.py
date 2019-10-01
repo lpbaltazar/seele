@@ -18,6 +18,7 @@ df = readChunk(file)
 # df.rename(columns = {0:'USERID', 1:'SESSIONID', 2:'MONTH', 3:'WEEK', 4:'DATE', 5:'DAY_OF_WEEK'}, inplace = True)
 df['MONTH'] = df['MONTH'].apply(lambda x: x[-2:])
 df['DATE'] = df['DATE'].apply(lambda x: x[-2:])
+df['MONTH_DATE'] = df['MONTH']+df['DATE']
 print(df.MONTH.unique())
 print(df.DATE.unique())
 print(len(df))
