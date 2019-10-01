@@ -22,7 +22,7 @@ df['MONTH_DATE'] = df['MONTH']+df['DATE']
 print(df.MONTH.unique())
 print(df.DATE.unique())
 print(len(df))
-df.drop_duplicates(subset = 'MONTH_DATE', keep = 'first', inplace = True)
+df.drop_duplicates(subset = ['USERID', 'MONTH_DATE'], keep = 'first', inplace = True)
 print(len(df))
 
 df.MONTH = df.MONTH.astype(int)
