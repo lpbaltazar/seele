@@ -85,14 +85,12 @@ def barPlot(data, xlabel, ylabel, outfile, title = None, print_number = False, s
 		plt.show()
 	plt.clf()
 
-def plotWeeklyRegularity(weekno = None, week = None, ylim = None, outfile = None):
+def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = None):
 	df = readChunk("status/results/regularity_combined.csv")
 	print(len(df))
-	if isinstance(week, pd.DataFrame):
-		df = df.merge(week, how = 'right', on = 'USERID')	
-		df.drop('INCEPTION_WEEK', axis = 1, inplace = True)
-
-	print('Number of customers: ', len(df.USERID.unique()))
+	if type(custids) is list:
+		df = df[df['USERID'].isin(custids)]
+		print('Number of customers: ', len(df.USERID.unique()))
 	
 	print(df.columns)
 	df.dropna(subset = ['RWEEK'], inplace = True)
@@ -135,8 +133,8 @@ def plotWeeklyRegularity(weekno = None, week = None, ylim = None, outfile = None
 def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = None, regularity_type = 'mode', mode_type = None):
 	df = readChunk("status/results/regularity_combined.csv")
 	print(len(df))
-	if custids:
-		df = df[df['USERID'].isin(temp)]
+	if type(custids) is list:
+		df = df[df['USERID'].isin(custids)]
 
 	print('Number of customers: ', len(df.USERID.unique()))
 	
@@ -229,9 +227,10 @@ if __name__ == '__main__':
 	# plotRegularityFreq()
 	# plotWeeklyRegularity(outfile = "results/weekly_regfreq_many.png", ylim = 300000)
 	# plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode', ylim = 300000)
-	weekno = sys.argv[1]
-	file = "../data/week"+weeknno+"5_frequency_engagement.csv"
-	df = pd.read_csv(file)
-	custids = df.userid.unqiue()
-	plotWeeklyRegularity(custids, weekno = weekno, outfile = "results/weekly/regfreq/week"+weekno+".png")
-	plotWeeklyRegularity2(custids, weekno = weekno, outfile = "results/weekly/customerregfreq/week"+weekno+".png")
+	weeknum = sys.argv[1]
+	print(weeknum)
+	file = "../data/week"+weeknum+"_frequency_engagement.csv"
+	df = pd.read_csv(file, sep = "\t")
+	custids = list(df.userid.unique())
+	plotWeeklyRegularity(custids= custids, weekno = weeknum, outfile = "results/weekly/regfreq/week"+weeknum+".png")
+	plotWeeklyRegularity2(custids = custids, weekno = weeknum, outfile = "results/weekly/customerregfreq/week"+weeknum+".png")
