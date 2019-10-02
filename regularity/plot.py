@@ -124,6 +124,7 @@ def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = N
 		if y == 4:
 			y = 0
 			x = x + 1
+		new_df.to_csv('results/reqfreq/week_'+str(i)'.csv')
 	fig.delaxes(axes[7,3])
 	fig.delaxes(axes[7,2])
 	if outfile:
@@ -180,6 +181,7 @@ def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = 
 		if y == 4:
 			y = 0
 			x = x + 1
+		new_df.to_csv('results/customerregfreq/week_'+str(i)'.csv')
 	fig.delaxes(axes[7,3])
 	fig.delaxes(axes[7,2])
 	# fig.tight_layout()
@@ -225,12 +227,12 @@ if __name__ == '__main__':
 	# plotWeeklyRegularity3("results/feb3_weekly_regularity.csv", "results/feb3_regularity.csv")
 	# plotWeeklyRegularity(outfile = "results/all.png", ylim = 300000)
 	# plotRegularityFreq()
-	# plotWeeklyRegularity(outfile = "results/weekly_regfreq_many.png", ylim = 300000)
-	# plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode', ylim = 300000)
-	weeknum = sys.argv[1]
-	print(weeknum)
-	file = "../data/week"+weeknum+"_frequency_engagement.csv"
-	df = pd.read_csv(file, sep = "\t")
-	custids = list(df.userid.unique())
-	plotWeeklyRegularity(custids= custids, weekno = weeknum, outfile = "results/weekly/regfreq/week"+weeknum+".png")
-	plotWeeklyRegularity2(custids = custids, weekno = weeknum, outfile = "results/weekly/customerregfreq/week"+weeknum+".png")
+	plotWeeklyRegularity(outfile = "results/weekly_regfreq_many.png", ylim = 300000)
+	plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode', ylim = 300000)
+	# weeknum = sys.argv[1]
+	# print(weeknum)
+	# file = "../data/week"+weeknum+"_frequency_engagement.csv"
+	# df = pd.read_csv(file, sep = "\t")
+	# custids = list(df.userid.unique())
+	# plotWeeklyRegularity(custids= custids, weekno = weeknum, outfile = "results/weekly/regfreq/week"+weeknum+".png")
+	# plotWeeklyRegularity2(custids = custids, weekno = weeknum, outfile = "results/weekly/customerregfreq/week"+weeknum+".png")
