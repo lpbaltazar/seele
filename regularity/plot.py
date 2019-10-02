@@ -130,7 +130,7 @@ def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = N
 			if y == 4:
 				y = 0
 				x = x + 1
-			new_df.to_csv('results/reqfreq/week_'+x+str(i)'.png')
+			new_df.to_csv('results/reqfreq/week_'+x+str(i)+'.png')
 		fig.delaxes(axes[7,3])
 		fig.delaxes(axes[7,2])
 		outfile = "results/regfreq"+x+str(i)+'.csv'
@@ -192,7 +192,7 @@ def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = 
 			if y == 4:
 				y = 0
 				x = x + 1
-			new_df.to_csv('results/customerregfreq/week_'+x+str(i)'.csv')
+			new_df.to_csv('results/customerregfreq/week_'+x+str(i)+'.csv')
 		fig.delaxes(axes[7,3])
 		fig.delaxes(axes[7,2])
 		# fig.tight_layout()
