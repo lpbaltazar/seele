@@ -130,10 +130,10 @@ def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = N
 			if y == 4:
 				y = 0
 				x = x + 1
-			new_df.to_csv('results/reqfreq/week_'+x+str(i)+'.png')
+			new_df.to_csv('results/reqfreq/week_'+z+str(i)+'.csv')
 		fig.delaxes(axes[7,3])
 		fig.delaxes(axes[7,2])
-		outfile = "results/regfreq"+z+str(i)+'.csv'
+		outfile = "results/regfreq"+z+str(i)+'.png'
 		if outfile:
 			plt.savefig(outfile, dpi = 600)
 
@@ -160,7 +160,7 @@ def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = 
 		elif mode_type == 'max':
 			df = df.groupby('USERID')['RWEEK'].agg(lambda x: max(pd.Series.mode(x))).to_frame()
 		else:
-			df = df.groupby(['USERID', 'WEEK'])['RWEEK'].agg(lambda x: pd.Series.mode(x)[0]).to_frame()
+			df = df.groupby(['USERID'])['RWEEK'].agg(lambda x: pd.Series.mode(x)[0]).to_frame()
 	df.reset_index(inplace = True)
 	print(df.head())
 	df = df.merge(cust_type, how = 'left', on = 'USERID')
@@ -198,7 +198,7 @@ def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = 
 		# fig.tight_layout()
 		# plt.rcParams['figure.constrained_layout.use'] = True
 		# plt.subplots_adjust(bottom = 0.1)
-		outfile = "results/customerregfreq"+x+str(i)+'.png'
+		outfile = "results/customerregfreq"+z+str(i)+'.png'
 		if outfile:
 			plt.savefig(outfile, dpi = 600)
 
@@ -239,8 +239,8 @@ if __name__ == '__main__':
 	# plotWeeklyRegularity3("results/feb3_weekly_regularity.csv", "results/feb3_regularity.csv")
 	# plotWeeklyRegularity(outfile = "results/all.png", ylim = 300000)
 	# plotRegularityFreq()
-	plotWeeklyRegularity(outfile = "results/weekly_regfreq_many.png", ylim = 300000)
-	plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode', ylim = 300000)
+	# plotWeeklyRegularity(outfile = "results/weekly_regfreq_many.png", ylim = 300000)
+	plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode', mode_type = 'max')
 	# weeknum = sys.argv[1]
 	# print(weeknum)
 	# file = "../data/week"+weeknum+"_frequency_engagement.csv"
