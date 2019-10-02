@@ -103,8 +103,8 @@ def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = N
 	df = df.loc[df.WEEK != 201904]
 	df = df.merge(cust_type, how = 'left', on = 'USERID')
 	print(df.CUSTOMERTYPE)
-	for x in ['ACTIVE', 'LOST']:
-		df_2 = df.loc[df.CUSTOMERTYPE == x]
+	for z in ['ACTIVE', 'LOST']:
+		df_2 = df.loc[df.CUSTOMERTYPE == z]
 		fig, axes = plt.subplots(8,4, sharey = 'row', constrained_layout = True)
 		x = 0
 		y = 0
@@ -133,7 +133,7 @@ def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = N
 			new_df.to_csv('results/reqfreq/week_'+x+str(i)+'.png')
 		fig.delaxes(axes[7,3])
 		fig.delaxes(axes[7,2])
-		outfile = "results/regfreq"+x+str(i)+'.csv'
+		outfile = "results/regfreq"+z+str(i)+'.csv'
 		if outfile:
 			plt.savefig(outfile, dpi = 600)
 
@@ -164,8 +164,8 @@ def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = 
 	df.reset_index(inplace = True)
 	print(df.head())
 	df = df.merge(cust_type, how = 'left', on = 'USERID')
-	for x in ['ACTIVE', 'LOST']:
-		df_2 = df.loc[df.CUSTOMERTYPE == x]
+	for z in ['ACTIVE', 'LOST']:
+		df_2 = df.loc[df.CUSTOMERTYPE == z]
 		fig, axes = plt.subplots(8,4, sharey = 'row', constrained_layout = True)
 		x = 0
 		y = 0
@@ -192,7 +192,7 @@ def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = 
 			if y == 4:
 				y = 0
 				x = x + 1
-			new_df.to_csv('results/customerregfreq/week_'+x+str(i)+'.csv')
+			new_df.to_csv('results/customerregfreq/week_'+z+str(i)+'.csv')
 		fig.delaxes(axes[7,3])
 		fig.delaxes(axes[7,2])
 		# fig.tight_layout()
