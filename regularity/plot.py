@@ -44,13 +44,6 @@ def plotRegularityFreq():
 		new_df2.loc[i]['COUNT'] = len(temp)
 	barPlot(new_df2, 'REGULARITY', 'NUMBER OF CUSTOMERS', 'customerregfreq_many.png', print_number = True, savefig = True)
 
-
-	# plot = sns.distplot(a = new_df['RWEEK'].values, kde = False, bins = 7)
-	# plot.set_xlabel('REGULARITY')
-	# plot.set_ylabel('NUMBER OF CUSTOMERS')
-	# plt.savefig('customerregfreq.png', dpi = 600)
-	# plt.clf()
-
 def plotRegularityTenure():
 	file = 'results/tenure.csv'
 	df = readChunk(file)
@@ -195,9 +188,6 @@ def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = 
 			new_df.to_csv('results/customerregfreq/week_'+z+str(i)+'.csv')
 		fig.delaxes(axes[7,3])
 		fig.delaxes(axes[7,2])
-		# fig.tight_layout()
-		# plt.rcParams['figure.constrained_layout.use'] = True
-		# plt.subplots_adjust(bottom = 0.1)
 		outfile = "results/customerregfreq"+z+str(i)+'.png'
 		if outfile:
 			plt.savefig(outfile, dpi = 600)
@@ -229,6 +219,28 @@ def plotWeeklyRegularity3(file, file2 = None, ylim = None):
 	plot.set_xlabel('REGULARITY')
 	plt.savefig("weekly_average_regularity.png", dpi = 300)
 
+def plotDayofWeek():
+	df = pd.read_csv("status/rweek.csv")
+	df = readChunk("status/results/regularity_combined.csv")
+
+	df.columns = ['WEEK', 'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'RWEEK', 'USERID']
+	df.dropna(subset = ['RWEEK'], inplace = True)
+	print('Number of customers: ', len(df.USERID.unique()))
+	df['RWEEK'] = df['RWEEK'].astype(int)
+	df['WEEK'] = df["WEEK"].astype(int)
+	df.sort_values('RWEEK', inplace = True)
+	df = df.loc[df.WEEK != 201904]
+
+	dayofweek = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY']
+	for i in df.RWEEK.unique():
+		new_df = pd.DataFrame(index = dayofweek, columns = ['COUNT'])
+		temp = df.loc[df.RWEEK == i]
+		for j in dayofweek:
+			new_df.loc[j]['COUNT'] = temp[j].sum()
+
+		print(new_df)
+
+
 if __name__ == '__main__':
 	# df = pd.read_csv('results/countCustomerTypePerRegularity.csv')
 	# print(df)
@@ -240,7 +252,7 @@ if __name__ == '__main__':
 	# plotWeeklyRegularity(outfile = "results/all.png", ylim = 300000)
 	# plotRegularityFreq()
 	# plotWeeklyRegularity(outfile = "results/weekly_regfreq_many.png", ylim = 300000)
-	plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode', mode_type = 'max')
+	# plotWeeklyRegularity2(outfile = "results/weekly_customerregfreq_many.png", regularity_type = 'mode', mode_type = 'max')
 	# weeknum = sys.argv[1]
 	# print(weeknum)
 	# file = "../data/week"+weeknum+"_frequency_engagement.csv"
@@ -248,3 +260,5 @@ if __name__ == '__main__':
 	# custids = list(df.userid.unique())
 	# plotWeeklyRegularity(custids= custids, weekno = weeknum, outfile = "results/weekly/regfreq/week"+weeknum+".png")
 	# plotWeeklyRegularity2(custids = custids, weekno = weeknum, outfile = "results/weekly/customerregfreq/week"+weeknum+".png")
+
+	plotDayofWeek()
