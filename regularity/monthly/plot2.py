@@ -38,6 +38,7 @@ def plotRegularityFreq():
 	barPlot(new_df, 'REGULARITY', 'COUNT', 'regfreq_many.png', print_number = True, savefig = True)
 
 	new_df = df.groupby('USERID')['RMONTH'].mean().to_frame()
+	new_df['RMONTH'] = round(new_df['RMONTH'])
 	print(new_df.head())
 	new_df2 = pd.DataFrame(index = list(range(1,31)), columns = ['COUNT'])
 	new_df2.index.name = 'REGULARITY'
@@ -70,7 +71,7 @@ def barPlot(data, xlabel, ylabel, outfile, title = None, print_number = False, s
 	if print_number:
 		count = 0
 		for i in plot.patches:
-			plot.text(count, i.get_height()+.5, str(data.iloc[count]['COUNT']), horizontalalignment='center')
+			plot.text(count, i.get_height()+.5, str(data.iloc[count]['COUNT']), horizontalalignment='center', fontsize = 10)
 			count = count + 1
 	plot.set_xlabel(xlabel)
 	plot.set_ylabel(ylabel)
@@ -81,7 +82,7 @@ def barPlot(data, xlabel, ylabel, outfile, title = None, print_number = False, s
 	plt.clf()
 
 def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = None):
-	df = readChunk("../status/results/regularity_combined.csv")
+	df = readChunk("../status/results/regularity_combined_monthly.csv")
 	print(len(df))
 	if type(custids) is list:
 		df = df[df['USERID'].isin(custids)]
@@ -98,6 +99,9 @@ def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = N
 	x = 0
 	y = 0
 
+	months = ['FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST']
+	count = 0
+
 	for i in df.MONTH.unique():
 		temp = df.loc[df.MONTH == i]
 		new_df = pd.DataFrame(index = list(range(1,31)), columns = ['COUNT'])
@@ -107,7 +111,7 @@ def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = N
 			new_df.loc[j]['COUNT'] = len(temp2)
 		plot = new_df.plot(kind = 'bar', legend = False, ax = axes[x, y], rot = 0)
 		plot.tick_params(axis = 'both', which = 'major', labelsize = 6, pad = 2)
-		plot.set_title(i, size = 6, pad = 2)
+		plot.set_title(months[count], size = 6, pad = 2)
 		x_axis = plot.axes.get_xaxis()
 		x_label = x_axis.get_label()
 		x_label.set_visible(False)
@@ -118,8 +122,9 @@ def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = N
 			y = 0
 			x = x + 1
 		new_df.to_csv('results/reqfreq/week_'+str(i)+'.csv')
-	fig.delaxes(axes[7,3])
-	fig.delaxes(axes[7,2])
+		count = count + 1
+	# fig.delaxes(axes[7,3])
+	fig.delaxes(axes[3,1])
 	# outfile = "results/regfreq"+z+str(i)+'.png'
 	if outfile:
 		plt.savefig(outfile, dpi = 600)
@@ -128,13 +133,14 @@ def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = N
 def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = None, regularity_type = 'mean', mode_type = None):
 	df = readChunk("../status/results/regularity_combined_monthly.csv")
 	print(len(df))
+	print(df.head())
 	if type(custids) is list:
 		df = df[df['USERID'].isin(custids)]
 
 	print('Number of customers: ', len(df.USERID.unique()))
 	
 
-	df.dropna(subset = ['RWEEK'], inplace = True)
+	df.dropna(subset = ['RMONTH'], inplace = True)
 
 	print('Number of customers: ', len(df.USERID.unique()))
 	df['RMONTH'] = df['RMONTH'].astype(int)
@@ -148,14 +154,16 @@ def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = 
 		else:
 			df = df.groupby(['USERID'])['RWEEK'].agg(lambda x: pd.Series.mode(x)[0]).to_frame()
 	elif regularity_type == 'mean':
-			df = df.groupby('USERID')['RWEEK'].mean().to_frame()
+			df = df.groupby('USERID', 'MONTH')['RMONTH'].mean().to_frame()
+			df['RMONTH'] = round(df.RMONTH)
 	else:
 		print('What regularity type?')
 	fig, axes = plt.subplots(4,2, sharey = 'row', constrained_layout = True)
 	x = 0
 	y = 0
-	for i in sorted(df_2.WEEK.unique()):
-		temp = df_2.loc[df_2.WEEK == i]
+	print(df.head())
+	for i in sorted(df.MONTH.unique()):
+		temp = df.loc[df.MONTH == i]
 		new_df = pd.DataFrame(index = list(range(1, 32)), columns = ['COUNT'])
 		new_df.index.name = 'REGULARITY'
 		for j in range(1, 32):
@@ -176,21 +184,21 @@ def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = 
 			y = 0
 			x = x + 1
 		new_df.to_csv('results/customerregfreq/week_'+z+str(i)+'.csv')
-	fig.delaxes(axes[7,3])
-	fig.delaxes(axes[7,2])
+	# fig.delaxes(axes[7,3])
+	fig.delaxes(axes[3,1])
 	if outfile:
 		plt.savefig(outfile, dpi = 600)
 
 def plotMonthlyWeekly():
 	df = pd.read_csv("../status/rweek.csv")
-	df2 = pd.read_csv("../status/results/rmonth.csv")
+	df2 = pd.read_csv("../status/rmonth.csv")
 
 	df = df.merge(df2, how = 'left', on = 'USERID')
 	print(df.head())
 
 	df.sort_values('RMONTH', inplace = True)
 	new_df = pd.DataFrame(index = df.RMONTH.unique(), columns = range(1,8))
-	new_df.index = 'RMONTH'
+	new_df.index.name = 'RMONTH'
 	for i in df.RMONTH.unique():
 		temp = df.loc[df.RMONTH == i]
 		for j in temp.RWEEK.unique():
@@ -199,10 +207,11 @@ def plotMonthlyWeekly():
 
 	print(new_df.head(30))
 	new_df.to_csv('rmonthvsrweek.csv')
+	
 	barPlot(new_df, 'REGULARITY MONTHLY', 'NUMBER OF CUSTOMERS', 'results/rmonthvsrweek.png', print_number = True, savefig = True)
 
 if __name__ == '__main__':
-	plotRegularityFreq()
-	plotWeeklyRegularity(outfile = "results/monthly_regfreq_many.png")
-	plotWeeklyRegularity2(outfile = "results/monthly_customerregfreq_many.png")
+	# plotRegularityFreq()
+	# plotWeeklyRegularity(outfile = "results/monthly_regfreq_many.png", ylim = 350000)
+	# plotWeeklyRegularity2(outfile = "results/monthly_customerregfreq_many.png")
 	plotMonthlyWeekly()
