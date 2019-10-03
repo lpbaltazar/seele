@@ -2,7 +2,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 import sys
-sys.path.append("../")
+sys.path.append("../../")
 
 import os
 import time
@@ -182,8 +182,8 @@ def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = 
 		plt.savefig(outfile, dpi = 600)
 
 def plotMonthlyWeekly():
-	df = pd.read_csv("../status/results/regularity_combined.csv")
-	df2 = pd.read_csv("../status/results/regularity_combined_monthly.csv")
+	df = pd.read_csv("../status/rweek.csv")
+	df2 = pd.read_csv("../status/results/rmonth.csv")
 
 	df = df.merge(df2, how = 'left', on = 'USERID')
 	print(df.head())
