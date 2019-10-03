@@ -181,7 +181,28 @@ def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = 
 	if outfile:
 		plt.savefig(outfile, dpi = 600)
 
+def plotMonthlyWeekly():
+	df = pd.read_csv("../status/results/regularity_combined.csv")
+	df2 = pd.read_csv("../status/results/regularity_combined_monthly.csv")
+
+	df = df.merge(df2, how = 'left', on = 'USERID')
+	print(df.head())
+
+	df.sort_values('RMONTH', inplace = True)
+	new_df = pd.DataFrame(index = df.RMONTH.unique(), columns = range(1,8))
+	new_df.index = 'RMONTH'
+	for i in df.RMONTH.unique():
+		temp = df.loc[df.RMONTH == i]
+		for j in temp.RWEEK.unique():
+			temp2 = temp.loc[temp.RWEEK == j]
+			new_df.loc[int(i)][int(j)] = len(temp2)
+
+	print(new_df.head(30))
+	new_df.to_csv('rmonthvsrweek.csv')
+	barPlot(new_df, 'REGULARITY MONTHLY', 'NUMBER OF CUSTOMERS', 'results/rmonthvsrweek.png', print_number = True, savefig = True)
+
 if __name__ == '__main__':
 	plotRegularityFreq()
 	plotWeeklyRegularity(outfile = "results/monthly_regfreq_many.png")
 	plotWeeklyRegularity2(outfile = "results/monthly_customerregfreq_many.png")
+	plotMonthlyWeekly()
