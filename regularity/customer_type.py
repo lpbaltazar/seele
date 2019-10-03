@@ -62,7 +62,7 @@ def getCustomerType():
 	toCSV(transact, 'results/customer_type.csv', index = False)
 
 def customerType2(df):
-	regularity_inverse = {1:7, 2:6, 3:5, 5:3, 6:2, 7:1}
+	regularity_inverse = {1:7, 2:6, 3:5, 4:4, 5:3, 6:2, 7:1}
 	df['RWEEK2'] = df.RWEEK
 	df["RWEEK2"] = df.RWEEK2.map(regularity_inverse)
 	ctype = []
@@ -90,7 +90,7 @@ def calculateTenure():
 	toCSV(df, 'results/tenure.csv', index = False)
 
 if __name__ == '__main__':
-	customerRegularity("status/results/regularity_combined.csv", regularity_type = 'mode')
-	transactionDates()
+	# customerRegularity("status/results/regularity_combined.csv", regularity_type = 'mode')
+	# transactionDates()
 	getCustomerType()
 	calculateTenure()
