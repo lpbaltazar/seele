@@ -47,28 +47,36 @@ def getCustomerType():
 	print('getting customer types...')
 	transact = readChunk('results/transaction_dates.csv')
 	aver = readChunk('results/average_regularity.csv')
+	intersession = pd.read_csv('results/intersession.csv')
+	intersession.columns = intersession.columns.str.upper()
 	transact = transact.merge(aver, how = 'left', on = 'USERID')
+	transact = transact.merge(intersession, how = 'right', on = 'USERID')
 	transact['LAST_TRANSACTION'] = pd.to_datetime(transact['LAST_TRANSACTION'])
 	print(transact.head())
 	transact['RWEEK'] = transact['RWEEK'].astype(float)
 	s = time.time()
 	transact['INACTIVITY_DAYS'] = transact['LAST_TRANSACTION'].apply(lambda x: (pd.to_datetime('2019-09-01') - x).days) 
 	transact['INACTIVITY_DAYS'] = transact['INACTIVITY_DAYS'].apply(lambda x: 0 if x == -1 else x).astype(float)
-	transact = customerType2(transact)
+	transact = customerType2(transact, how = 'new')
 	print(transact.head(10))
 	e = time.time()
 	total_time = time.strftime("%H:%M:%S", time.gmtime(e-s))
 	print("Total process time is {}".format(total_time))
 	toCSV(transact, 'results/customer_type.csv', index = False)
 
-def customerType2(df):
+def customerType2(df, how = 'old'):
 	regularity_inverse = {1:7, 2:6, 3:5, 4:4, 5:3, 6:2, 7:1}
 	df['RWEEK2'] = df.RWEEK
 	df["RWEEK2"] = df.RWEEK2.map(regularity_inverse)
 	ctype = []
-	for i in range(len(df)):
-		if df.iloc[i]['INACTIVITY_DAYS'] <= df.iloc[i]['RWEEK2'] + 7: ctype.append('ACTIVE')
-		else: ctype.append('LOST')
+	if how == 'old':
+		for i in range(len(df)):
+			if df.iloc[i]['INACTIVITY_DAYS'] <= (df.iloc[i]['RWEEK2'] + 7): ctype.append('ACTIVE')
+			else: ctype.append('LOST')
+	elif how == 'new':
+		for i in range(len(df)):
+			if df.iloc[i]['INACTIVITY_DAYS'] <= (df.iloc[i]['RWEEK2'] + df.iloc[i]['INTERSESSION']): ctype.append('ACTIVE')
+			else: ctype.append('LOST')
 	df['CUSTOMERTYPE'] = ctype
 	return df
 
