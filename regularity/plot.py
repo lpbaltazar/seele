@@ -234,13 +234,33 @@ def plotDayofWeek():
 	dayofweek = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY']
 	for i in dayofweek:
 		df[i] = df[i].astype(int)
+
+	fig, axes = plt.subplots(3,3, sharey = 'row', constrained_layout = True)	
+	x = 0
+	y = 0
 	for i in df.RWEEK.unique():
 		new_df = pd.DataFrame(index = dayofweek, columns = ['COUNT'])
 		temp = df.loc[df.RWEEK == i]
 		for j in dayofweek:
 			new_df.loc[j]['COUNT'] = temp[j].sum()
+		plot = new_df.plot(kind = 'bar', legend = False, ax = axes[x, y], rot = 0)
+		plot.tick_params(axis = 'both', which = 'major', labelsize = 6, pad = 2)
+		plot.set_title("Regularity = {}".format(i), size = 6, pad = 2)
+		x_axis = plot.axes.get_xaxis()
+		x_label = x_axis.get_label()
+		x_label.set_visible(False)
+		if ylim:
+			plot.set_ylim(0,ylim)
+		y = y + 1
+		if y == 3:
+			y = 0
+			x = x + 1
+	fig.delaxes(axes[2,1])
+	fig.delaxes(axes[2,2])
+	outfile = 'results/dayofweek.png'
+	if outfile:
+		plt.savefig(outfile, dpi = 600)
 
-		print(new_df)
 
 
 if __name__ == '__main__':
