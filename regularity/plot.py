@@ -86,7 +86,7 @@ def barPlot(data, xlabel, ylabel, outfile, title = None, print_number = False, s
 	plt.clf()
 
 def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = None):
-	cust_type = pd.read_csv("results/customer_type.csv", usecols = ['USERID', 'CUSTOMERTYPE'])
+	# cust_type = pd.read_csv("results/customer_type.csv", usecols = ['USERID', 'CUSTOMERTYPE'])
 	df = readChunk("status/results/regularity_combined.csv")
 
 	print(len(df))
@@ -101,41 +101,41 @@ def plotWeeklyRegularity(weekno = None, custids = None, ylim = None, outfile = N
 	df['WEEK'] = df["WEEK"].astype(int)
 	df.sort_values('WEEK', inplace = True)
 	df = df.loc[df.WEEK != 201904]
-	df = df.merge(cust_type, how = 'left', on = 'USERID')
-	print(df.CUSTOMERTYPE)
-	for z in ['ACTIVE', 'LOST']:
-		df_2 = df.loc[df.CUSTOMERTYPE == z]
-		fig, axes = plt.subplots(8,4, sharey = 'row', constrained_layout = True)
-		x = 0
-		y = 0
-		print(weekno, df_2.WEEK.unique())
-		for i in df_2.WEEK.unique():
-			temp = df_2.loc[df_2.WEEK == i]
-			new_df = pd.DataFrame(index = [1,2,3,4,5,6,7], columns = ['COUNT'])
-			new_df.index.name = 'REGULARITY'
-			for j in range(1, 8):
-				temp2 = temp.loc[temp.RWEEK == j]
-				new_df.loc[j]['COUNT'] = len(temp2)
-			plot = new_df.plot(kind = 'bar', legend = False, ax = axes[x, y], rot = 0)
-			# plot.set_ylabel('NUMBER OF CUSTOMERS')
-			# plot.set_xlabel('REGULARITY')
-			plot.tick_params(axis = 'both', which = 'major', labelsize = 6, pad = 2)
-			plot.set_title(i, size = 6, pad = 2)
-			x_axis = plot.axes.get_xaxis()
-			x_label = x_axis.get_label()
-			x_label.set_visible(False)
-			if ylim:
-				plot.set_ylim(0,ylim)
-			y = y + 1
-			if y == 4:
-				y = 0
-				x = x + 1
-			new_df.to_csv('results/reqfreq/week_'+z+str(i)+'.csv')
-		fig.delaxes(axes[7,3])
-		fig.delaxes(axes[7,2])
-		outfile = "results/regfreq"+z+str(i)+'.png'
-		if outfile:
-			plt.savefig(outfile, dpi = 600)
+	# df = df.merge(cust_type, how = 'left', on = 'USERID')
+	# print(df.CUSTOMERTYPE)
+	# for z in ['ACTIVE', 'LOST']:
+	# df_2 = df.loc[df.CUSTOMERTYPE == z]
+	fig, axes = plt.subplots(8,4, sharey = 'row', constrained_layout = True)
+	x = 0
+	y = 0
+	print(weekno, df.WEEK.unique())
+	for i in df.WEEK.unique():
+		temp = df.loc[df.WEEK == i]
+		new_df = pd.DataFrame(index = [1,2,3,4,5,6,7], columns = ['COUNT'])
+		new_df.index.name = 'REGULARITY'
+		for j in range(1, 8):
+			temp2 = temp.loc[temp.RWEEK == j]
+			new_df.loc[j]['COUNT'] = len(temp2)
+		plot = new_df.plot(kind = 'bar', legend = False, ax = axes[x, y], rot = 0)
+		# plot.set_ylabel('NUMBER OF CUSTOMERS')
+		# plot.set_xlabel('REGULARITY')
+		plot.tick_params(axis = 'both', which = 'major', labelsize = 6, pad = 2)
+		plot.set_title(i, size = 6, pad = 2)
+		x_axis = plot.axes.get_xaxis()
+		x_label = x_axis.get_label()
+		x_label.set_visible(False)
+		if ylim:
+			plot.set_ylim(0,ylim)
+		y = y + 1
+		if y == 4:
+			y = 0
+			x = x + 1
+		new_df.to_csv('results/reqfreq/week_'+str(i)+'.csv')
+	fig.delaxes(axes[7,3])
+	fig.delaxes(axes[7,2])
+	# outfile = "results/regfreq"+z+str(i)+'.png'
+	if outfile:
+		plt.savefig(outfile, dpi = 600)
 
 
 def plotWeeklyRegularity2(weekno = None, custids = None, ylim = None, outfile = None, regularity_type = 'mode', mode_type = None):
