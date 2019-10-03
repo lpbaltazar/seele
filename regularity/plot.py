@@ -232,6 +232,8 @@ def plotDayofWeek():
 	df = df.loc[df.WEEK != 201904]
 
 	dayofweek = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY']
+	for i in dayofweek:
+		df[i] = df[i].astype(int)
 	for i in df.RWEEK.unique():
 		new_df = pd.DataFrame(index = dayofweek, columns = ['COUNT'])
 		temp = df.loc[df.RWEEK == i]
