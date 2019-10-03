@@ -64,9 +64,9 @@ def plotRegularityTenure():
 		plt.savefig(str(i)+'.png', dpi = 600)
 		plt.clf()
 
-def barPlot(data, xlabel, ylabel, outfile, title = None, print_number = False, savefig = False, showfig = False):
+def barPlot(data, xlabel, ylabel, outfile, stacked = False, title = None, print_number = False, savefig = False, showfig = False):
 	print('here')
-	plot = data.plot(kind = 'bar', legend = False, rot = 0)
+	plot = data.plot(kind = 'bar', legend = False, rot = 0, stacked = stacked)
 	if title: plt.title(title)
 	if print_number:
 		count = 0
@@ -207,8 +207,8 @@ def plotMonthlyWeekly():
 
 	print(new_df.head(30))
 	new_df.to_csv('rmonthvsrweek.csv')
-	
-	barPlot(new_df, 'REGULARITY MONTHLY', 'NUMBER OF CUSTOMERS', 'results/rmonthvsrweek.png', print_number = True, savefig = True)
+
+	barPlot(new_df, 'MONTHLY REGULARITY', 'NUMBER OF CUSTOMERS', 'results/rmonthvsrweek.png', stacked = True, print_number = False, savefig = True)
 
 if __name__ == '__main__':
 	# plotRegularityFreq()
