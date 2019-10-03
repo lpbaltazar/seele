@@ -201,10 +201,11 @@ def plotMonthlyWeekly():
 	new_df.index.name = 'RMONTH'
 	for i in df.RMONTH.unique():
 		temp = df.loc[df.RMONTH == i]
+		total = len(temp)
 		for j in temp.RWEEK.unique():
 			temp2 = temp.loc[temp.RWEEK == j]
-			new_df.loc[int(i)][int(j)] = len(temp2)
-
+			new_df.loc[int(i)][int(j)] = (len(temp2)/total)*100
+	new_df.index = new_df.index.astype(int)
 	print(new_df.head(30))
 	new_df.to_csv('rmonthvsrweek.csv')
 
